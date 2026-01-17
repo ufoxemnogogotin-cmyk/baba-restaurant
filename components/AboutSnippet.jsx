@@ -1,0 +1,123 @@
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+
+export default function AboutSnippet() {
+  const titleContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const wordAnimation = {
+    hidden: { 
+      opacity: 0, 
+      y: 40,
+      filter: "blur(8px)" 
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+
+  return (
+    <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-40 lg:pb-64 overflow-hidden">
+      <div className="container mx-auto px-12 lg:px-24 relative">
+        
+        <div className="mb-16 lg:mb-20">
+          <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold mb-6 opacity-40">Наследието</h2>
+          <div className="h-[1px] w-24 bg-[#722F37]/30"></div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          
+          <div className="lg:col-span-8">
+            {/* ЗАГЛАВИЕ СТРИКТНО НА ДВА РЕДА - БЕЗ КЛИПВАНЕ */}
+            <motion.h3 
+              variants={titleContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-[#212121] text-5xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-12 flex flex-col gap-0 overflow-visible"
+            >
+              {/* ПЪРВИ РЕД - overflow-visible и pr-10 за италик наклона */}
+              <div className="overflow-visible block pr-10">
+                {"Където миналото".split(" ").map((word, i) => (
+                  <motion.span key={i} variants={wordAnimation} className="inline-block mr-4">
+                    {word}
+                  </motion.span>
+                ))}
+              </div>
+              
+              {/* ВТОРИ РЕД - pr-20 за безопасност на финалното "В" */}
+              <div className="overflow-visible block pr-20">
+                <motion.span 
+                  variants={wordAnimation}
+                  className="text-[#722F37] lg:ml-[12%] inline-block"
+                >
+                  намира нов смисъл
+                </motion.span>
+              </div>
+            </motion.h3>
+            
+            <div className="max-w-xl lg:ml-[12%] space-y-8">
+              <p className="text-[#212121]/70 text-lg leading-relaxed italic">
+                BABA не е просто дестинация, а преживяване, вдъхновено от аристократизма на 19-ти век и смелостта на съвременното изкуство.
+              </p>
+              <p className="text-[#212121]/60 text-[15px] leading-relaxed">
+                Всяка рецепта е прочит на класиката през призмата на модерните кулинарни техники, поднесена върху бели покривки.
+              </p>
+            </div>
+          </div>
+
+          <div className="lg:col-span-4 flex flex-col items-end justify-center h-full pt-12 lg:pt-32">
+            <div className="relative w-full aspect-square max-w-[280px] mb-12">
+               <div 
+                 className="absolute inset-0 rotate-12 scale-150 opacity-10"
+                 style={{ 
+                   backgroundColor: '#636B2F',
+                   WebkitMaskImage: 'url("/logo.svg")',
+                   maskImage: 'url("/logo.svg")',
+                   WebkitMaskRepeat: 'no-repeat',
+                   maskRepeat: 'no-repeat',
+                   WebkitMaskSize: 'contain',
+                   maskSize: 'contain',
+                   WebkitMaskPosition: 'center',
+                   maskPosition: 'center'
+                 }}
+               />
+               
+               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span className="text-[#722F37] text-8xl lg:text-[7vw] font-serif italic leading-none">2025</span>
+                  <span className="text-[#212121] text-[10px] uppercase tracking-[0.5em] font-bold opacity-40 mt-4">Est.</span>
+               </div>
+            </div>
+            
+            {/* БУТОН: border-2 и чиста анимация от долу нагоре */}
+            <Link 
+              href="/about" 
+              className="group relative px-12 py-5 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none flex items-center justify-center rounded-none"
+            >
+               <span className="relative z-10 text-[#212121] text-[11px] font-bold uppercase tracking-[0.5em] transition-colors duration-500 group-hover:text-white">
+                 Вижте историята
+               </span>
+               <div className="absolute bottom-0 left-0 w-full h-0 bg-[#722F37] transition-all duration-500 ease-out group-hover:h-full"></div>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
