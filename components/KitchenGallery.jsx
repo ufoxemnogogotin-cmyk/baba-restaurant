@@ -10,11 +10,24 @@ const dishes = [
 
 export default function KitchenGallery() {
   const containerRef = useRef(null);
+  const scrollContainerRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Специфичен хендлър за мобилните точки (dots), който не товари скрола
+  const handleMobileScroll = (e) => {
+    if (window.innerWidth >= 1024) return;
+    const scrollLeft = e.target.scrollLeft;
+    const width = e.target.offsetWidth;
+    const index = Math.round(scrollLeft / width);
+    setActiveIndex(index);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current) return;
+      // ИЗКЛЮЧВАМЕ логиката за телефон - тя работи само на Desktop (1024px+)
+      if (!containerRef.current || window.innerWidth < 1024) return;
+      
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const progress = Math.min(Math.max(-rect.top / (rect.height - windowHeight), 0), 1);
@@ -25,21 +38,17 @@ export default function KitchenGallery() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const getStyle = (index) => {
+  // ОРИГИНАЛНИЯТ СТИЛ ЗА DESKTOP - НЕ Е ПРОМЕНЯН
+  const getDesktopStyle = (index) => {
     const animationEnd = 0.85; 
     const step = animationEnd / dishes.length;
     const start = index * step;
     const end = (index + 1) * step;
-
     let x = index === 0 ? 0 : 150; 
-
     if (scrollProgress > start && scrollProgress <= end) {
       const localProg = (scrollProgress - start) / (end - start);
       x = index === 0 ? 0 : 150 - (localProg * 150);
-    } else if (scrollProgress > end) {
-      x = 0;
-    }
-
+    } else if (scrollProgress > end) { x = 0; }
     return {
       opacity: index === 0 ? 1 : (scrollProgress > start ? 1 : 0),
       transform: `translateX(${x}%) rotate(${index * 2}deg)`,
@@ -49,14 +58,13 @@ export default function KitchenGallery() {
   };
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] h-[350vh]">
+    // На мобилни h-auto, за да не се борим с лентата на браузъра (Safari/Chrome nav)
+    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] py-10 lg:py-0">
       
-      {/* STICKY CONTAINER */}
-      {/* Промяна: h-[100dvh] гарантира, че се събира точно в екрана на телефона */}
-      <div className="sticky top-0 h-[100dvh] lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden">
+      <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden">
         
-        {/* BACKGROUND TEXT (ARTFOOD) */}
-        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none overflow-hidden z-0">
+        {/* BACKGROUND TEXT (ARTFOOD) - Само за Desktop */}
+        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none z-0">
           <span 
             className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
             style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}
@@ -65,58 +73,95 @@ export default function KitchenGallery() {
           </span>
         </div>
 
-        {/* MAIN CONTENT CONTAINER */}
-        <div className="container lg:w-full lg:max-w-1200 mx-auto px-6 md:px-12 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full relative h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between z-10 py-4 lg:py-0">
+        <div className="container mx-auto px-4 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
           
-          {/* MOBILE TITLE - Намален margin-bottom */}
-          <div className="w-full lg:hidden text-center mb-2 flex-shrink-0 z-[50]">
-            <h2 className="text-[#212121]/40 uppercase tracking-[0.5em] text-[10px] font-bold">
+          {/* TEXT AREA - Напълно независими стилове за мобилни/десктоп */}
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-6 lg:mb-0">
+            <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[10px] lg:text-[10px] font-bold mb-2 lg:mb-16">
               Culinary Heritage
             </h2>
-          </div>
-
-          {/* IMAGES SIDE - Order 1 на мобилни (най-отгоре) */}
-          {/* Промяна: h-[40vh] на мобилни, за да остави място за текста долу */}
-          <div className="relative h-[45vh] sm:h-[50vh] lg:h-[80vh] w-full lg:w-[55%] flex items-center justify-center lg:justify-end order-1 lg:order-2 flex-shrink-0 mb-4 lg:mb-0">
-            {dishes.map((dish, index) => (
-              <div 
-                key={dish.id}
-                style={getStyle(index)}
-                // Mobile: w-[65%] за да не е твърде широко
-                className="absolute w-[65%] sm:w-[320px] lg:w-[400px] bg-white p-2 pb-8 lg:p-4 lg:pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom"
-              >
-                <div className="relative aspect-[3.5/5] overflow-hidden grayscale-[10%]">
-                  <Image src={dish.img} alt={dish.title} fill className="object-cover" priority={index === 0} />
-                </div>
-                <div className="absolute bottom-2 lg:bottom-6 left-0 w-full text-center px-2">
-                  <span className="text-[#212121]/60 font-serif italic text-[10px] lg:text-[14px] tracking-[0.2em] uppercase block truncate">
-                    {dish.title}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* TEXT SIDE - Order 2 на мобилни (отдолу) */}
-          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start order-2 lg:order-1 text-center lg:text-left flex-shrink-0">
-            <h2 className="hidden lg:block text-[#212121]/40 uppercase tracking-[0.8em] text-[10px] font-bold mb-16 opacity-40">
-              Culinary Heritage
-            </h2>
+            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] uppercase mb-4 lg:mb-12">
+              Вкусът <br className="hidden lg:block" /> на <br className="hidden lg:block" /> миналото
+            </h3>
             
-            {/* Промяна: На мобилен text-3xl, за да се събере. На Desktop си остава огромно 7.5vw */}
-            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1] tracking-tighter uppercase mb-2 lg:mb-12">
-  Вкусът <br className="hidden lg:block" /> 
-  на <br className="hidden lg:block" /> 
-  миналото
-</h3>
-            
-            <p className="text-[#212121]/70 text-[11px] lg:text-[18px] font-light italic leading-relaxed max-w-[280px] lg:max-w-md mx-auto lg:mx-0 border-none lg:border-l-2 border-[#722F37]/20 lg:pl-8">
+            {/* Desktop цитат */}
+            <p className="hidden lg:block text-[#212121]/70 text-[18px] font-light italic leading-relaxed max-w-md border-l-2 border-[#722F37]/20 pl-8">
               "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
             </p>
           </div>
 
+          {/* IMAGES AREA */}
+          <div className="w-full lg:w-[55%] relative">
+            
+            {/* MOBILE ONLY: CAROUSEL (Snap Scroll) - Не зависи от JS скрола на браузъра */}
+            <div className="block lg:hidden w-full">
+              <div 
+                onScroll={handleMobileScroll}
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-5 px-10 pb-8"
+              >
+                {dishes.map((dish) => (
+                  <div 
+                    key={`mob-${dish.id}`} 
+                    className="snap-center shrink-0 w-[75vw] bg-white p-2 pb-8 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]"
+                  >
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <Image src={dish.img} alt={dish.title} fill className="object-cover" />
+                    </div>
+                    <div className="mt-4 text-center">
+                      <span className="text-[#212121]/60 font-serif italic text-[11px] tracking-[0.2em] uppercase">
+                        {dish.title}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Скрол индикатор (Dots) */}
+              <div className="flex justify-center gap-2 mt-2">
+                {dishes.map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={`h-[2px] transition-all duration-300 ${activeIndex === i ? "w-6 bg-[#722F37]" : "w-2 bg-[#212121]/10"}`}
+                  />
+                ))}
+              </div>
+
+              {/* Мобилен цитат - Под снимките, за да не пречи горе */}
+              <div className="mt-8 px-6 text-center">
+                <p className="text-[#212121]/70 text-[12px] font-light italic leading-relaxed">
+                   "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
+                </p>
+              </div>
+            </div>
+
+            {/* DESKTOP ONLY: ORIGINAL STACKED ANIMATION - Не е пипана */}
+            <div className="hidden lg:flex relative h-[80vh] w-full items-center justify-end">
+              {dishes.map((dish, index) => (
+                <div 
+                  key={`dt-${dish.id}`} 
+                  style={getDesktopStyle(index)} 
+                  className="absolute lg:w-[400px] bg-white lg:p-4 lg:pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom"
+                >
+                  <div className="relative aspect-[3.5/5] overflow-hidden grayscale-[10%]">
+                    <Image src={dish.img} alt={dish.title} fill className="object-cover" priority={index === 0} />
+                  </div>
+                  <div className="absolute lg:bottom-6 left-0 w-full text-center px-2">
+                    <span className="text-[#212121]/60 font-serif italic lg:text-[14px] tracking-[0.2em] uppercase block truncate">
+                      {dish.title}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </section>
   );
 }
