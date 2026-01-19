@@ -56,7 +56,7 @@ export default function KitchenGallery() {
       
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center lg:overflow-hidden">
         
-        {/* BACKGROUND TEXT */}
+        {/* BACKGROUND TEXT - Desktop Only */}
         <div className="hidden lg:flex absolute bottom-12 left-0 w-full justify-start pointer-events-none z-0">
           <span className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none" style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}>
             Artfood
@@ -65,12 +65,12 @@ export default function KitchenGallery() {
 
         <div className="container mx-auto px-0 lg:px-0 lg:pl-[150px] lg:pr-[5vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
           
-          {/* TEXT AREA - Центриран на мобилни, ляво на десктоп */}
-          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-8 lg:mb-0 px-6 lg:px-0">
+          {/* TEXT AREA */}
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-4 lg:mb-0 px-6 lg:px-0">
             <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[10px] font-bold mb-2 lg:mb-16">
               Culinary Heritage
             </h2>
-            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] uppercase mb-4 lg:mb-12">
+            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] uppercase mb-0 lg:mb-12">
               Вкусът <br className="hidden lg:block" /> на <br className="hidden lg:block" /> миналото
             </h3>
             <p className="hidden lg:block text-[#212121]/70 text-[18px] font-light italic leading-relaxed max-w-md border-l-2 border-[#722F37]/20 lg:pl-8">
@@ -81,24 +81,22 @@ export default function KitchenGallery() {
           {/* IMAGES AREA */}
           <div className="w-full lg:w-[45%] relative">
             
-            {/* MOBILE ONLY - EDGE TO EDGE CAROUSEL */}
+            {/* MOBILE ONLY - EDGE TO EDGE WITHOUT HARSH BOX */}
             <div className="block lg:hidden w-screen overflow-visible relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
               <div 
                 onScroll={handleMobileScroll}
-                /* gap-4 и по-голям padding за "peek" ефект без рязане */
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[12vw] pb-16 overflow-y-visible"
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-12 overflow-y-visible"
               >
                 {dishes.map((dish) => (
                   <div 
                     key={`mob-${dish.id}`} 
-                    /* Картите са по-близо (w-[76vw]) и със супер мека сянка */
-                    className="snap-center shrink-0 w-[76vw] bg-white p-2 pb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)]"
+                    className="snap-center shrink-0 w-[80vw] bg-white p-2 pb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)]"
                   >
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <Image src={dish.img} alt={dish.title} fill className="object-cover" />
                     </div>
                     <div className="mt-6 text-center">
-                      <span className="text-[#212121]/50 font-serif italic text-[11px] tracking-[0.2em] uppercase">
+                      <span className="text-[#212121]/50 font-serif italic text-[12px] tracking-[0.2em] uppercase">
                         {dish.title}
                       </span>
                     </div>
@@ -106,17 +104,11 @@ export default function KitchenGallery() {
                 ))}
               </div>
               
-              {/* Индикатори */}
+              {/* Dots */}
               <div className="flex justify-center gap-3 mt-0">
                 {dishes.map((_, i) => (
                   <div key={i} className={`h-[1px] transition-all duration-500 ${activeIndex === i ? "w-8 bg-[#722F37]" : "w-3 bg-[#212121]/10"}`} />
                 ))}
-              </div>
-
-              <div className="mt-10 px-10 text-center">
-                <p className="text-[#212121]/60 text-[12px] font-light italic leading-relaxed">
-                   "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
-                </p>
               </div>
             </div>
 
