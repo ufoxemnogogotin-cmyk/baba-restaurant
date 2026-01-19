@@ -258,7 +258,7 @@ export default function Navbar() {
           )}
         </AnimatePresence>
 
-        {/* --- MOBILE STICKY BAR (CLEAN & STABLE) --- */}
+        {/* --- MOBILE STICKY BAR (FINAL STABLE VERSION) --- */}
         <AnimatePresence>
           {scrolled && !isOpen && !isTransitioning && (
             <motion.div 
@@ -266,11 +266,13 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className="lg:hidden fixed bottom-0 left-0 w-full z-[110]"
+              // ВАЖНО: Тук задаваме белия фон и padding-a за Safe Area.
+              // Това създава "кутията" отдолу, която е част от контейнера.
+              className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-5px_20px_rgba(0,0,0,0.03)]"
             >
-              
-              {/* БУТОНИ */}
-              <div className="grid grid-cols-5 h-16 bg-[#F5F2ED] border-t border-[#212121]/10">
+              <div className="grid grid-cols-5 h-16 border-t border-[#212121]/5">
+                
+                {/* БУТОНИ С ФИКСИРАНА ВИСОЧИНА */}
                 <Link href="tel:+359888000000" className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-16">
                   <div className="h-full w-full flex items-center justify-center">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -289,12 +291,6 @@ export default function Navbar() {
                   </div>
                 </a>
               </div>
-
-              {/* SAFE AREA SPACER */}
-              <div 
-                className="w-full bg-white" 
-                style={{ height: 'env(safe-area-inset-bottom)' }}
-              />
             </motion.div>
           )}
         </AnimatePresence>
