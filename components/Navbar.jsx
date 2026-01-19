@@ -258,7 +258,7 @@ export default function Navbar() {
           )}
         </AnimatePresence>
 
-        {/* --- MOBILE STICKY BAR (ANTI-STRETCH FIX) --- */}
+        {/* --- MOBILE STICKY BAR (CLEAN & STABLE) --- */}
         <AnimatePresence>
           {scrolled && !isOpen && !isTransitioning && (
             <motion.div 
@@ -266,17 +266,10 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              // FIX: Махнахме padding и background от тук
               className="lg:hidden fixed bottom-0 left-0 w-full z-[110]"
             >
-              {/* 1. ИНФО ЛЕНТА */}
-              <div className="w-full py-2 bg-[#F5F2ED] text-center border-t border-[#212121]/5 shadow-inner">
-                 <p className="text-[#212121] text-[9px] uppercase tracking-[0.2em] font-bold opacity-70">
-                   Народен театър "Иван Вазов", София
-                 </p>
-              </div>
               
-              {/* 2. БУТОНИ */}
+              {/* БУТОНИ */}
               <div className="grid grid-cols-5 h-16 bg-[#F5F2ED] border-t border-[#212121]/10">
                 <Link href="tel:+359888000000" className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-16">
                   <div className="h-full w-full flex items-center justify-center">
@@ -297,8 +290,7 @@ export default function Navbar() {
                 </a>
               </div>
 
-              {/* 3. SAFE AREA SPACER (FIX) */}
-              {/* Този празен div замества padding-a и е твърд блок, който не се разтяга */}
+              {/* SAFE AREA SPACER */}
               <div 
                 className="w-full bg-white" 
                 style={{ height: 'env(safe-area-inset-bottom)' }}
