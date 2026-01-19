@@ -14,7 +14,7 @@ export default function KitchenGallery() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Мобилен хендлър за индикатора на карусела
+  // Стриктно за мобилния индикатор
   const handleScrollDots = (e) => {
     if (window.innerWidth >= 1024) return;
     const scrollLeft = e.target.scrollLeft;
@@ -25,7 +25,6 @@ export default function KitchenGallery() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Работи само за десктоп, за да не хаби ресурси на мобилни
       if (!containerRef.current || window.innerWidth < 1024) return;
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
@@ -37,17 +36,21 @@ export default function KitchenGallery() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Оригиналната логика за десктоп анимацията - НЕ Е ПИПАНА
   const getStyle = (index) => {
     const animationEnd = 0.85; 
     const step = animationEnd / dishes.length;
     const start = index * step;
     const end = (index + 1) * step;
+
     let x = index === 0 ? 0 : 150; 
+
     if (scrollProgress > start && scrollProgress <= end) {
       const localProg = (scrollProgress - start) / (end - start);
       x = index === 0 ? 0 : 150 - (localProg * 150);
-    } else if (scrollProgress > end) { x = 0; }
+    } else if (scrollProgress > end) {
+      x = 0;
+    }
+
     return {
       opacity: index === 0 ? 1 : (scrollProgress > start ? 1 : 0),
       transform: `translateX(${x}%) rotate(${index * 2}deg)`,
@@ -57,49 +60,48 @@ export default function KitchenGallery() {
   };
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] py-8 lg:py-0">
+    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] py-10 lg:py-0">
       
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden">
         
-        {/* DESKTOP BACKGROUND TEXT - Недокоснат */}
-        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none z-0 overflow-hidden">
-          <span className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none" style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}>
+        {/* BACKGROUND TEXT (ARTFOOD) - Desktop only */}
+        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none overflow-hidden z-0">
+          <span 
+            className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
+            style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}
+          >
             Artfood
           </span>
         </div>
 
-        <div className="container mx-auto px-4 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
+        <div className="container lg:w-full lg:max-w-1200 mx-auto px-6 md:px-12 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full relative h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between z-10 py-4 lg:py-0">
           
-          {/* TEXT SIDE - Сбити падинги за мобилни */}
-          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-6 lg:mb-0">
-            <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[9px] font-bold mb-2 lg:mb-16">
+          {/* MOBILE TITLE */}
+          <div className="w-full lg:hidden text-center mb-2 flex-shrink-0 z-[50]">
+            <h2 className="text-[#212121]/40 uppercase tracking-[0.5em] text-[10px] font-bold">
               Culinary Heritage
             </h2>
-            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] uppercase mb-3 lg:mb-12">
-              Вкусът <br className="hidden lg:block" /> на <br className="hidden lg:block" /> миналото
-            </h3>
-            <p className="text-[#212121]/70 text-[12px] lg:text-[18px] font-light italic leading-relaxed max-w-[280px] lg:max-w-md mx-auto lg:mx-0 lg:border-l-2 border-[#722F37]/20 lg:pl-8">
-              "Всяка чиния е разказ, писан преди два века."
-            </p>
           </div>
 
-          {/* IMAGES SIDE */}
-          <div className="w-full lg:w-[55%] relative">
+          {/* IMAGES SIDE - MOBILE CAROUSEL */}
+          <div className="w-full lg:w-[55%] relative order-1 lg:order-2">
             
-            {/* MOBILE CAROUSEL - ЗАПАЗЕН ОРИГИНАЛЕН ДИЗАЙН НА КАРТИТЕ */}
-            <div className="block lg:hidden w-full">
+            {/* MOBILE ONLY CAROUSEL */}
+            <div className="lg:hidden w-full">
               <div 
                 ref={scrollContainerRef}
                 onScroll={handleScrollDots}
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-5 px-10 pb-6"
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-6 px-12 pb-6"
               >
                 {dishes.map((dish) => (
-                  <div key={`mob-${dish.id}`} className="snap-center shrink-0 w-[78vw] bg-white p-3 pb-10 shadow-[0_15px_45px_rgba(0,0,0,0.12)]">
-                    <div className="relative aspect-[4/5] overflow-hidden grayscale-[10%]">
+                  <div key={`mob-${dish.id}`} className="snap-center shrink-0 w-[72vw] flex flex-col items-center">
+                    {/* Карта с изчистен дизайн и мека сянка без отсичане */}
+                    <div className="relative w-full aspect-[4/5] overflow-hidden rounded-sm shadow-[0_15px_35px_-10px_rgba(0,0,0,0.25)]">
                       <Image src={dish.img} alt={dish.title} fill className="object-cover" />
                     </div>
-                    <div className="text-center mt-5">
-                      <span className="text-[#212121]/60 font-serif italic text-[11px] tracking-[0.2em] uppercase block">
+                    {/* Текстът е извън бокса за по-луксозно усещане */}
+                    <div className="mt-4 text-center">
+                      <span className="text-[#212121]/60 font-serif italic text-[11px] tracking-[0.2em] uppercase">
                         {dish.title}
                       </span>
                     </div>
@@ -107,31 +109,55 @@ export default function KitchenGallery() {
                 ))}
               </div>
               
-              {/* INDICATOR DOTS */}
+              {/* Скрол индикатор (Dots) */}
               <div className="flex justify-center gap-2 mt-2">
                 {dishes.map((_, i) => (
-                  <div key={i} className={`h-[2px] transition-all duration-300 ${activeIndex === i ? "w-6 bg-[#722F37]" : "w-2 bg-[#212121]/10"}`} />
+                  <div 
+                    key={i} 
+                    className={`h-[2px] transition-all duration-300 ${activeIndex === i ? "w-6 bg-[#722F37]" : "w-2 bg-[#212121]/10"}`}
+                  />
                 ))}
               </div>
             </div>
 
-            {/* DESKTOP STACKED - ОРИГИНАЛЕН КОД (Непипан) */}
+            {/* DESKTOP ONLY STACKED - Остава недокоснат */}
             <div className="hidden lg:flex relative h-[80vh] w-full items-center justify-end">
               {dishes.map((dish, index) => (
-                <div key={`dt-${dish.id}`} style={getStyle(index)} className="absolute lg:w-[400px] bg-white lg:p-4 lg:pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom">
+                <div 
+                  key={`dt-${dish.id}`}
+                  style={getStyle(index)}
+                  className="absolute lg:w-[400px] bg-white p-2 pb-8 lg:p-4 lg:pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom"
+                >
                   <div className="relative aspect-[3.5/5] overflow-hidden grayscale-[10%]">
                     <Image src={dish.img} alt={dish.title} fill className="object-cover" priority={index === 0} />
                   </div>
-                  <div className="absolute lg:bottom-6 left-0 w-full text-center px-2">
-                    <span className="text-[#212121]/60 font-serif italic lg:text-[14px] tracking-[0.2em] uppercase block truncate">
+                  <div className="absolute bottom-2 lg:bottom-6 left-0 w-full text-center px-2">
+                    <span className="text-[#212121]/60 font-serif italic text-[10px] lg:text-[14px] tracking-[0.2em] uppercase block truncate">
                       {dish.title}
                     </span>
                   </div>
                 </div>
               ))}
             </div>
-
           </div>
+
+          {/* TEXT SIDE - Остава недокоснат като съдържание */}
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start order-2 lg:order-1 text-center lg:text-left flex-shrink-0 mt-6 lg:mt-0">
+            <h2 className="hidden lg:block text-[#212121]/40 uppercase tracking-[0.8em] text-[10px] font-bold mb-16 opacity-40">
+              Culinary Heritage
+            </h2>
+            
+            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1] tracking-tighter uppercase mb-4 lg:mb-12">
+              Вкусът <br className="hidden lg:block" /> 
+              на <br className="hidden lg:block" /> 
+              миналото
+            </h3>
+            
+            <p className="text-[#212121]/70 text-[11px] lg:text-[18px] font-light italic leading-relaxed max-w-[280px] lg:max-w-md mx-auto lg:mx-0 border-none lg:border-l-2 border-[#722F37]/20 lg:pl-8">
+              "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
+            </p>
+          </div>
+
         </div>
       </div>
 
