@@ -73,7 +73,7 @@ export default function KitchenGallery() {
           </span>
         </div>
 
-        <div className="container mx-auto px-4 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
+        <div className="container mx-auto px-4 lg:px-0 lg:pl-[200px] lg:pr-[15vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
           
           {/* TEXT AREA - Напълно независими стилове за мобилни/десктоп */}
           <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-6 lg:mb-0">
