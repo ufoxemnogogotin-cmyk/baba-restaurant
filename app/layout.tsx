@@ -27,8 +27,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Тук можеш да регулираш чувствителността. 
-      // > 10 е по-добре за мобилни, за да реагира веднага щом мръднеш.
+      // Тук бутонът ще реагира веднага щом мръднеш (скрие се адрес барът)
       setScrolled(window.scrollY > 10); 
     };
     window.addEventListener("scroll", handleScroll);
@@ -39,31 +38,23 @@ export default function Navbar() {
     document.body.style.overflow = (isOpen || isTransitioning) ? "hidden" : "unset";
   }, [isOpen, isTransitioning]);
 
-  // ------------------------------------------------------------------
-  // 🔄 ЛОГИКА ЗА КЛИК ВЪРХУ ЛОГОТО
-  // ------------------------------------------------------------------
   const handleLogoClick = (e) => {
     e.preventDefault();
-    
     if (pathname === "/" && window.scrollY === 0) {
       setIsOpen(false);
       return;
     }
-
     setIsOpen(false);
     setIsTransitioning(true);
-
     setTimeout(() => {
       if (pathname === "/") {
         window.scrollTo(0, 0);
       } else {
         router.push("/");
       }
-
       setTimeout(() => {
         setIsTransitioning(false);
       }, 100);
-
     }, 600);
   };
 
@@ -76,50 +67,24 @@ export default function Navbar() {
     { name: "Контакти", path: "/contact", img: null },
   ];
 
-  // --- ANIMATION CONFIG ---
-
   const smoothEasing = [0.22, 1, 0.36, 1]; 
 
   const menuVariants = {
-    initial: {
-      x: isMobile ? "100%" : "-100%", 
-    },
+    initial: { x: isMobile ? "100%" : "-100%" },
     animate: {
       x: "0%",
-      transition: {
-        duration: isMobile ? 1.2 : 1.5, 
-        ease: smoothEasing,
-        staggerChildren: 0.1,
-        delayChildren: isMobile ? 0.4 : 0.5,
-      },
+      transition: { duration: isMobile ? 1.2 : 1.5, ease: smoothEasing, staggerChildren: 0.1, delayChildren: isMobile ? 0.4 : 0.5 },
     },
     exit: {
       x: isMobile ? "100%" : "-100%",
-      transition: {
-        duration: isMobile ? 1.0 : 1.2, 
-        ease: smoothEasing, 
-      },
+      transition: { duration: isMobile ? 1.0 : 1.2, ease: smoothEasing },
     },
   };
 
   const linkVariants = {
-    initial: { 
-      x: -80, 
-      opacity: 0 
-    },
-    animate: { 
-      x: 0, 
-      opacity: 1,
-      transition: {
-        duration: 1.2, 
-        ease: smoothEasing
-      }
-    },
-    exit: { 
-      opacity: 0,
-      x: -40, 
-      transition: { duration: 0.5, ease: "easeIn" }
-    }
+    initial: { x: -80, opacity: 0 },
+    animate: { x: 0, opacity: 1, transition: { duration: 1.2, ease: smoothEasing } },
+    exit: { opacity: 0, x: -40, transition: { duration: 0.5, ease: "easeIn" } }
   };
 
   return (
@@ -137,7 +102,7 @@ export default function Navbar() {
       </AnimatePresence>
 
       <header>
-        {/* --- MOBILE NAV BAR (MODIFIED FOR SHRINK EFFECT) --- */}
+        {/* --- MOBILE NAV BAR (SHRINKS ON SCROLL) --- */}
         <nav 
           className={`lg:hidden fixed top-0 left-0 w-full z-[110] px-4 flex items-center justify-between border-b border-white/5 bg-[#212121] transition-all duration-500 ease-in-out
           ${scrolled ? 'h-16 shadow-lg' : 'h-24'} 
@@ -192,24 +157,17 @@ export default function Navbar() {
               className="fixed inset-0 z-[100] bg-[#212121] flex flex-col md:flex-row"
             >
               <div className="w-full h-full flex flex-col md:flex-row relative pt-32 md:pt-0 overflow-y-auto">
-                
                 {/* Links Section */}
                 <nav className="w-full md:w-2/3 flex flex-col justify-center px-10 md:pl-48 space-y-4 md:space-y-8">
                   {menuItems.map((item, index) => (
-                    <motion.div 
-                      key={index}
-                      variants={linkVariants}
-                    >
+                    <motion.div key={index} variants={linkVariants}>
                       <Link 
                         href={item.path}
                         onMouseEnter={() => setHoveredImage(item.img)} 
                         onMouseLeave={() => setHoveredImage(null)}      
                         onClick={(e) => {
-                          if (item.path === "/") {
-                            handleLogoClick(e);
-                          } else {
-                            setIsOpen(false);
-                          }
+                          if (item.path === "/") handleLogoClick(e);
+                          else setIsOpen(false);
                         }}
                         className="block text-white text-4xl md:text-7xl font-extralight uppercase tracking-tighter hover:italic hover:pl-4 md:hover:pl-8 transition-all duration-300 opacity-70 hover:opacity-100"
                       >
@@ -237,18 +195,15 @@ export default function Navbar() {
                       )}
                     </AnimatePresence>
                   </div>
-
                   <address className="text-left md:text-right space-y-8 md:space-y-12 not-italic">
                     <div className="space-y-2">
                       <p className="text-white/40 uppercase tracking-widest text-[10px]">Локация</p>
                       <p className="text-white text-lg md:text-xl font-light italic">ул. "Артизанска" №12, София</p>
-                      
                       <p className="text-white/40 uppercase tracking-widest text-[10px] mt-6">Телефон за резервации</p>
                       <a href="tel:+359888888888" className="block text-white text-lg md:text-xl font-light italic hover:text-[#d4af37] transition-colors">
                         +359 888 888 888
                       </a>
                     </div>
-
                     <div className="space-y-4 border-t border-white/10 pt-8 mb-20 md:mb-0">
                       <p className="text-white/40 uppercase tracking-widest text-[10px]">Работно време</p>
                       <div className="flex flex-col space-y-3 text-white font-light text-sm italic">
@@ -269,7 +224,7 @@ export default function Navbar() {
           )}
         </AnimatePresence>
 
-        {/* --- MOBILE STICKY BAR (CLEAN & STABLE) --- */}
+        {/* --- MOBILE STICKY BAR (AT THE VERY BOTTOM) --- */}
         <AnimatePresence>
           {scrolled && !isOpen && !isTransitioning && (
             <motion.div 
@@ -277,35 +232,30 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className="lg:hidden fixed bottom-0 left-0 w-full z-[110]"
+              // Променихме структурата тук:
+              // 1. bg-[#F5F2ED] е сложен на основния container, за да запълни всичко до долу.
+              // 2. pb-[env(safe-area-inset-bottom)] гарантира, че бутоните са над чертата, но фонът е зад нея.
+              className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-[#F5F2ED] border-t border-[#212121]/10 pb-[env(safe-area-inset-bottom)]"
             >
-              
-              {/* БУТОНИ */}
-              <div className="grid grid-cols-5 h-16 bg-[#F5F2ED] border-t border-[#212121]/10">
-                <Link href="tel:+359888000000" className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-16">
+              <div className="grid grid-cols-5 h-16 w-full">
+                <Link href="tel:+359888000000" className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-full">
                   <div className="h-full w-full flex items-center justify-center">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                   </div>
                 </Link>
                 
-                <Link href="/reservation" className="col-span-3 flex flex-col bg-white group active:bg-[#212121] transition-colors duration-300 h-16">
+                <Link href="/reservation" className="col-span-3 flex flex-col bg-white group active:bg-[#212121] transition-colors duration-300 h-full">
                   <div className="h-full w-full flex items-center justify-center">
                     <span className="text-[#212121] group-active:text-white uppercase tracking-[0.4em] text-[11px] font-bold">BOOK A TABLE</span>
                   </div>
                 </Link>
                 
-                <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="col-span-1 flex flex-col bg-white border-l border-[#212121]/5 active:bg-gray-100 h-16">
+                <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="col-span-1 flex flex-col bg-white border-l border-[#212121]/5 active:bg-gray-100 h-full">
                   <div className="h-full w-full flex items-center justify-center">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                   </div>
                 </a>
               </div>
-
-              {/* SAFE AREA SPACER */}
-              <div 
-                className="w-full bg-white" 
-                style={{ height: 'env(safe-area-inset-bottom)' }}
-              />
             </motion.div>
           )}
         </AnimatePresence>
