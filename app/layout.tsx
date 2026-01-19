@@ -26,8 +26,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Логика: Щом има скрол (дори минимален), приемаме че сме надолу
-      setScrolled(window.scrollY > 10); 
+      setScrolled(window.scrollY > 10);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -66,7 +65,7 @@ export default function Navbar() {
     { name: "Контакти", path: "/contact", img: null },
   ];
 
-  const smoothEasing = [0.22, 1, 0.36, 1]; 
+  const smoothEasing = [0.22, 1, 0.36, 1];
 
   const menuVariants = {
     initial: { x: isMobile ? "100%" : "-100%" },
@@ -102,7 +101,6 @@ export default function Navbar() {
 
       <header>
         {/* --- MOBILE NAV BAR (TOP) --- */}
-        {/* Когато scrolled е false (най-горе) -> h-24 (голямо). Когато е true -> h-16 (малко) */}
         <nav 
           className={`lg:hidden fixed top-0 left-0 w-full z-[110] px-4 flex items-center justify-between border-b border-white/5 bg-[#212121] transition-all duration-500 ease-in-out
           ${scrolled ? 'h-16 shadow-lg' : 'h-24'} 
@@ -176,11 +174,30 @@ export default function Navbar() {
                   ))}
                 </nav>
                 <div className="w-full md:w-1/3 flex flex-col justify-between p-10 md:pb-20 md:pr-20">
-                   {/* ... съдържание на менюто ... */}
-                   <address className="text-left md:text-right space-y-8 md:space-y-12 not-italic">
+                  <div className="hidden md:block relative w-full aspect-[4/3] mt-24 overflow-hidden rounded-sm">
+                    <AnimatePresence mode="wait">
+                      {hoveredImage && (
+                        <motion.div
+                          key={hoveredImage}
+                          initial={{ opacity: 0, scale: 1.05 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 1.05 }}
+                          transition={{ duration: 0.4 }}
+                          className="relative w-full h-full"
+                        >
+                          <Image src={hoveredImage} alt="Preview" fill className="object-cover" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <address className="text-left md:text-right space-y-8 md:space-y-12 not-italic">
                     <div className="space-y-2">
-                       <p className="text-white/40 uppercase tracking-widest text-[10px]">Локация</p>
-                       <p className="text-white text-lg md:text-xl font-light italic">ул. "Артизанска" №12, София</p>
+                      <p className="text-white/40 uppercase tracking-widest text-[10px]">Локация</p>
+                      <p className="text-white text-lg md:text-xl font-light italic">ул. "Артизанска" №12, София</p>
+                       <p className="text-white/40 uppercase tracking-widest text-[10px] mt-6">Телефон за резервации</p>
+                      <a href="tel:+359888888888" className="block text-white text-lg md:text-xl font-light italic hover:text-[#d4af37] transition-colors">
+                        +359 888 888 888
+                      </a>
                     </div>
                   </address>
                 </div>
@@ -189,18 +206,19 @@ export default function Navbar() {
           )}
         </AnimatePresence>
 
-        {/* --- MOBILE STICKY BAR (НАЙ-ОТДОЛУ / VERY BOTTOM) --- */}
+        {/* --- MOBILE STICKY BAR (ABSOLUTELY BOTTOM) --- */}
         <AnimatePresence>
           {scrolled && !isOpen && !isTransitioning && (
             <motion.div 
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
-              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              // ВАЖНО: fixed + bottom-0 залепва елемента за дъното на viewport-а.
-              // pb-[env(safe-area-inset-bottom)] добавя вътрешен падинг само за iPhone чертата,
-              // но фонът (bg-[#F5F2ED]) се разпъва до самия физически край на екрана.
-              className="lg:hidden fixed bottom-0 left-0 w-full z-[999] bg-[#F5F2ED] border-t border-[#212121]/10 pb-[env(safe-area-inset-bottom)]"
+              transition={{ duration: 0.3, ease: "linear" }}
+              // ПРОМЕНИТЕ:
+              // 1. Използваме !bottom-0 за да наложим позицията.
+              // 2. z-[9999] за да е над всичко.
+              // 3. pb-[env(safe-area-inset-bottom)] добавя вътрешен падинг, но фонът (bg-[#F5F2ED]) покрива всичко.
+              className="lg:hidden fixed !bottom-0 left-0 w-full z-[9999] bg-[#F5F2ED] border-t border-[#212121]/10 pb-[env(safe-area-inset-bottom)]"
             >
               <div className="grid grid-cols-5 h-16 w-full">
                 {/* Телефон */}
