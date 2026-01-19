@@ -169,11 +169,11 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* --- FULL-SCREEN MENU (ANIMATED WITH FIX) --- */}
+        {/* --- FULL-SCREEN MENU --- */}
         <AnimatePresence>
           {isOpen && (
             <motion.div 
-              key="full-menu-container" // Key е задължителен за AnimatePresence
+              key="full-menu-container"
               variants={menuVariants}
               initial="initial"
               animate="animate"
@@ -274,19 +274,19 @@ export default function Navbar() {
                  </p>
               </div>
               
-              {/* FIX: Сменихме h-16 с h-auto, за да побере padding-a */}
-              <div className="grid grid-cols-5 h-auto bg-[#F5F2ED] border-t border-[#212121]/10 pb-[env(safe-area-inset-bottom)]">
+              {/* FIX: Премахнахме padding-a от тук */}
+              <div className="grid grid-cols-5 h-auto bg-[#F5F2ED] border-t border-[#212121]/10">
                 
-                {/* FIX: Добавено h-16 на всички бутони */}
-                <Link href="tel:+359888000000" className="h-16 col-span-1 flex items-center justify-center border-r border-[#212121]/5 bg-white active:bg-gray-100">
+                {/* FIX: Добавихме pb-[env...] и min-h-[64px] на самите бутони, за да разтегнат бялото */}
+                <Link href="tel:+359888000000" className="col-span-1 flex items-center justify-center border-r border-[#212121]/5 bg-white active:bg-gray-100 h-auto min-h-[64px] pb-[env(safe-area-inset-bottom)]">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 </Link>
                 
-                <Link href="/reservation" className="h-16 col-span-3 flex items-center justify-center bg-white group active:bg-[#212121] transition-colors duration-300">
+                <Link href="/reservation" className="col-span-3 flex items-center justify-center bg-white group active:bg-[#212121] transition-colors duration-300 h-auto min-h-[64px] pb-[env(safe-area-inset-bottom)]">
                   <span className="text-[#212121] group-active:text-white uppercase tracking-[0.4em] text-[11px] font-bold">BOOK A TABLE</span>
                 </Link>
                 
-                <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="h-16 col-span-1 flex items-center justify-center bg-white border-l border-[#212121]/5 active:bg-gray-100">
+                <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="col-span-1 flex items-center justify-center bg-white border-l border-[#212121]/5 active:bg-gray-100 h-auto min-h-[64px] pb-[env(safe-area-inset-bottom)]">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 </a>
               </div>
