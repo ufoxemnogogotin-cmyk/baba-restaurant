@@ -39,14 +39,21 @@ export default function ContactSection() {
 
       <div className="container mx-auto lg:ml-[10%] relative z-10">
         <div className="mb-16">
-          <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold opacity-40 mb-4">
+          <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold opacity-40 mb-4 text-center lg:text-left">
             Контакти
           </h2>
-          <div className="h-[1px] w-20 bg-[#722F37]/30"></div>
+          
+          {/* ПРОМЯНА ТУК: 
+              w-full (пълна ширина на мобилни) 
+              lg:w-20 (малка чертичка на десктоп) 
+              mx-auto (центрирана на мобилни)
+          */}
+          <div className="h-[1px] w-full lg:w-20 bg-[#722F37]/30 mx-auto lg:mx-0"></div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
-          <div className="lg:col-span-4 space-y-12">
+          {/* ИНФОРМАЦИОННА КОЛОНА */}
+          <div className="lg:col-span-4 space-y-12 text-center lg:text-left">
             <div>
               <motion.h1 
                 variants={titleContainer}
@@ -72,8 +79,7 @@ export default function ContactSection() {
 
                 <div className="space-y-4">
                   <p className="text-[#212121]/40 uppercase tracking-widest text-[11px] font-bold">Бърза връзка</p>
-                  <div className="flex gap-8 text-[11px] font-bold tracking-[0.2em]">
-                    {/* ЛИНКОВЕ С АНИМИРАНА ЛИНИЯ ОТ ЛЯВО НА ДЯСНО */}
+                  <div className="flex gap-8 text-[11px] font-bold tracking-[0.2em] justify-center lg:justify-start">
                     <a href="#" className="relative text-[#722F37] pb-1 group overflow-hidden">
                       INSTAGRAM
                       <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#722F37]/30"></span>
@@ -87,13 +93,14 @@ export default function ContactSection() {
                   </div>
                 </div>
 
+                {/* Тази долна линия е border-t, така че тя винаги е w-full (пълна ширина) */}
                 <div className="space-y-2 border-t border-[#212121]/10 pt-8">
                   <p className="text-[#212121]/40 uppercase tracking-widest text-[11px] font-bold">Работно време</p>
-                  <div className="flex justify-between items-center max-w-[250px]">
+                  <div className="flex justify-between items-center max-w-[250px] mx-auto lg:mx-0">
                     <span className="text-sm font-serif italic text-[#212121]">Пон - Съб</span>
                     <span className="text-sm font-bold text-[#212121]">12:00 - 00:00</span>
                   </div>
-                  <div className="flex justify-between items-center max-w-[250px]">
+                  <div className="flex justify-between items-center max-w-[250px] mx-auto lg:mx-0">
                     <span className="text-sm font-serif italic text-[#722F37]">Неделя</span>
                     <span className="text-[10px] font-bold uppercase tracking-tighter text-[#722F37]">Private Events Only</span>
                   </div>
@@ -102,6 +109,7 @@ export default function ContactSection() {
             </div>
           </div>
 
+          {/* ФОРМА ЗА КОНТАКТ */}
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -109,7 +117,7 @@ export default function ContactSection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="lg:col-span-8 bg-white p-10 lg:p-16 shadow-[0_50px_100px_rgba(0,0,0,0.04)] relative"
           >
-            <h3 className="text-2xl lg:text-3xl font-serif italic text-[#212121] mb-12">
+            <h3 className="text-2xl lg:text-3xl font-serif italic text-[#212121] mb-12 text-center lg:text-left">
               {isEventRequest ? "Запитване за частен прием" : "Изпратете ни съобщение"}
             </h3>
             
@@ -120,7 +128,7 @@ export default function ContactSection() {
               </div>
               <textarea placeholder="Вашето съобщение..." rows="4" className="w-full bg-transparent border-b border-[#212121]/10 pb-4 outline-none focus:border-[#722F37] transition-colors font-sans text-lg resize-none text-[#212121]"></textarea>
 
-              <div className="flex justify-end pt-4">
+              <div className="flex justify-center lg:justify-end pt-4">
                 <button className="relative overflow-hidden group px-14 py-5 bg-[#212121] transition-colors duration-500">
                   <span className="absolute inset-0 w-full h-full bg-[#722F37] transition-transform duration-500 ease-in-out translate-y-full group-hover:translate-y-0"></span>
                   <span className="relative z-10 text-white uppercase font-bold tracking-[0.2em] text-[11px]">
