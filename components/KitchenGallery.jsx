@@ -66,13 +66,14 @@ export default function KitchenGallery() {
         <div className="container mx-auto px-0 lg:px-0 lg:pl-[150px] lg:pr-[5vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
           
           {/* TEXT AREA */}
-          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-4 lg:mb-0 px-6 lg:px-0">
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-6 lg:mb-0 px-6 lg:px-0">
             <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[10px] font-bold mb-2 lg:mb-16">
               Culinary Heritage
             </h2>
             <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] uppercase mb-0 lg:mb-12">
               Вкусът <br className="hidden lg:block" /> на <br className="hidden lg:block" /> миналото
             </h3>
+            {/* Цитатът е СКРИТ за мобилни */}
             <p className="hidden lg:block text-[#212121]/70 text-[18px] font-light italic leading-relaxed max-w-md border-l-2 border-[#722F37]/20 lg:pl-8">
               "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
             </p>
@@ -81,22 +82,22 @@ export default function KitchenGallery() {
           {/* IMAGES AREA */}
           <div className="w-full lg:w-[45%] relative">
             
-            {/* MOBILE ONLY - EDGE TO EDGE WITHOUT HARSH BOX */}
+            {/* MOBILE ONLY - CLEAN EDGE-TO-EDGE CAROUSEL */}
             <div className="block lg:hidden w-screen overflow-visible relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
               <div 
                 onScroll={handleMobileScroll}
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-12 overflow-y-visible"
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-3 px-[8vw] pb-10 overflow-y-visible"
               >
                 {dishes.map((dish) => (
                   <div 
                     key={`mob-${dish.id}`} 
-                    className="snap-center shrink-0 w-[80vw] bg-white p-2 pb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)]"
+                    className="snap-center shrink-0 w-[84vw] bg-white p-2 pb-10 shadow-[0_20px_40px_rgba(0,0,0,0.04)]"
                   >
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <Image src={dish.img} alt={dish.title} fill className="object-cover" />
                     </div>
                     <div className="mt-6 text-center">
-                      <span className="text-[#212121]/50 font-serif italic text-[12px] tracking-[0.2em] uppercase">
+                      <span className="text-[#212121]/40 font-serif italic text-[12px] tracking-[0.2em] uppercase">
                         {dish.title}
                       </span>
                     </div>
