@@ -60,7 +60,7 @@ export default function KitchenGallery() {
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden">
         
         {/* BACKGROUND TEXT (ARTFOOD) */}
-        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none z-0">
+        <div className="hidden lg:flex absolute bottom-12 left-0 w-full justify-start pointer-events-none z-0">
           <span 
             className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
             style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}
