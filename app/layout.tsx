@@ -19,7 +19,6 @@ export default function Navbar() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
-    
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -27,7 +26,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Тук бутонът ще реагира веднага щом мръднеш (скрие се адрес барът)
+      // Логика: Щом има скрол (дори минимален), приемаме че сме надолу
       setScrolled(window.scrollY > 10); 
     };
     window.addEventListener("scroll", handleScroll);
@@ -102,7 +101,8 @@ export default function Navbar() {
       </AnimatePresence>
 
       <header>
-        {/* --- MOBILE NAV BAR (SHRINKS ON SCROLL) --- */}
+        {/* --- MOBILE NAV BAR (TOP) --- */}
+        {/* Когато scrolled е false (най-горе) -> h-24 (голямо). Когато е true -> h-16 (малко) */}
         <nav 
           className={`lg:hidden fixed top-0 left-0 w-full z-[110] px-4 flex items-center justify-between border-b border-white/5 bg-[#212121] transition-all duration-500 ease-in-out
           ${scrolled ? 'h-16 shadow-lg' : 'h-24'} 
@@ -157,7 +157,6 @@ export default function Navbar() {
               className="fixed inset-0 z-[100] bg-[#212121] flex flex-col md:flex-row"
             >
               <div className="w-full h-full flex flex-col md:flex-row relative pt-32 md:pt-0 overflow-y-auto">
-                {/* Links Section */}
                 <nav className="w-full md:w-2/3 flex flex-col justify-center px-10 md:pl-48 space-y-4 md:space-y-8">
                   {menuItems.map((item, index) => (
                     <motion.div key={index} variants={linkVariants}>
@@ -176,46 +175,12 @@ export default function Navbar() {
                     </motion.div>
                   ))}
                 </nav>
-
-                {/* Images & Info Section */}
                 <div className="w-full md:w-1/3 flex flex-col justify-between p-10 md:pb-20 md:pr-20">
-                  <div className="hidden md:block relative w-full aspect-[4/3] mt-24 overflow-hidden rounded-sm">
-                    <AnimatePresence mode="wait">
-                      {hoveredImage && (
-                        <motion.div
-                          key={hoveredImage}
-                          initial={{ opacity: 0, scale: 1.05 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 1.05 }}
-                          transition={{ duration: 0.4 }}
-                          className="relative w-full h-full"
-                        >
-                          <Image src={hoveredImage} alt="Preview" fill className="object-cover" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <address className="text-left md:text-right space-y-8 md:space-y-12 not-italic">
+                   {/* ... съдържание на менюто ... */}
+                   <address className="text-left md:text-right space-y-8 md:space-y-12 not-italic">
                     <div className="space-y-2">
-                      <p className="text-white/40 uppercase tracking-widest text-[10px]">Локация</p>
-                      <p className="text-white text-lg md:text-xl font-light italic">ул. "Артизанска" №12, София</p>
-                      <p className="text-white/40 uppercase tracking-widest text-[10px] mt-6">Телефон за резервации</p>
-                      <a href="tel:+359888888888" className="block text-white text-lg md:text-xl font-light italic hover:text-[#d4af37] transition-colors">
-                        +359 888 888 888
-                      </a>
-                    </div>
-                    <div className="space-y-4 border-t border-white/10 pt-8 mb-20 md:mb-0">
-                      <p className="text-white/40 uppercase tracking-widest text-[10px]">Работно време</p>
-                      <div className="flex flex-col space-y-3 text-white font-light text-sm italic">
-                        <div className="flex justify-between md:justify-end md:gap-8 items-center w-full">
-                          <span className="opacity-40 uppercase text-[10px] not-italic">Пон - Съб</span>
-                          <span className="text-base md:w-[160px] md:text-right">12:00 - 00:00</span>
-                        </div>
-                        <div className="flex justify-between md:justify-end md:gap-8 items-start w-full text-[#d4af37]">
-                          <span className="opacity-40 uppercase text-[10px] text-white">Неделя</span>
-                          <span className="text-base italic md:w-[160px] md:text-right">Private Parties Only</span>
-                        </div>
-                      </div>
+                       <p className="text-white/40 uppercase tracking-widest text-[10px]">Локация</p>
+                       <p className="text-white text-lg md:text-xl font-light italic">ул. "Артизанска" №12, София</p>
                     </div>
                   </address>
                 </div>
@@ -224,7 +189,7 @@ export default function Navbar() {
           )}
         </AnimatePresence>
 
-        {/* --- MOBILE STICKY BAR (AT THE VERY BOTTOM) --- */}
+        {/* --- MOBILE STICKY BAR (НАЙ-ОТДОЛУ / VERY BOTTOM) --- */}
         <AnimatePresence>
           {scrolled && !isOpen && !isTransitioning && (
             <motion.div 
@@ -232,24 +197,27 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              // Променихме структурата тук:
-              // 1. bg-[#F5F2ED] е сложен на основния container, за да запълни всичко до долу.
-              // 2. pb-[env(safe-area-inset-bottom)] гарантира, че бутоните са над чертата, но фонът е зад нея.
-              className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-[#F5F2ED] border-t border-[#212121]/10 pb-[env(safe-area-inset-bottom)]"
+              // ВАЖНО: fixed + bottom-0 залепва елемента за дъното на viewport-а.
+              // pb-[env(safe-area-inset-bottom)] добавя вътрешен падинг само за iPhone чертата,
+              // но фонът (bg-[#F5F2ED]) се разпъва до самия физически край на екрана.
+              className="lg:hidden fixed bottom-0 left-0 w-full z-[999] bg-[#F5F2ED] border-t border-[#212121]/10 pb-[env(safe-area-inset-bottom)]"
             >
               <div className="grid grid-cols-5 h-16 w-full">
+                {/* Телефон */}
                 <Link href="tel:+359888000000" className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-full">
                   <div className="h-full w-full flex items-center justify-center">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                   </div>
                 </Link>
                 
+                {/* Резервация */}
                 <Link href="/reservation" className="col-span-3 flex flex-col bg-white group active:bg-[#212121] transition-colors duration-300 h-full">
                   <div className="h-full w-full flex items-center justify-center">
                     <span className="text-[#212121] group-active:text-white uppercase tracking-[0.4em] text-[11px] font-bold">BOOK A TABLE</span>
                   </div>
                 </Link>
                 
+                {/* Локация */}
                 <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="col-span-1 flex flex-col bg-white border-l border-[#212121]/5 active:bg-gray-100 h-full">
                   <div className="h-full w-full flex items-center justify-center">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
