@@ -14,7 +14,6 @@ export default function KitchenGallery() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Специфичен хендлър за мобилните точки (dots), който не товари скрола
   const handleMobileScroll = (e) => {
     if (window.innerWidth >= 1024) return;
     const scrollLeft = e.target.scrollLeft;
@@ -25,7 +24,6 @@ export default function KitchenGallery() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // ИЗКЛЮЧВАМЕ логиката за телефон - тя работи само на Desktop (1024px+)
       if (!containerRef.current || window.innerWidth < 1024) return;
       
       const rect = containerRef.current.getBoundingClientRect();
@@ -38,7 +36,6 @@ export default function KitchenGallery() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ОРИГИНАЛНИЯТ СТИЛ ЗА DESKTOP - НЕ Е ПРОМЕНЯН
   const getDesktopStyle = (index) => {
     const animationEnd = 0.85; 
     const step = animationEnd / dishes.length;
@@ -58,12 +55,11 @@ export default function KitchenGallery() {
   };
 
   return (
-    // На мобилни h-auto, за да не се борим с лентата на браузъра (Safari/Chrome nav)
     <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] py-10 lg:py-0">
       
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden">
         
-        {/* BACKGROUND TEXT (ARTFOOD) - Само за Desktop */}
+        {/* BACKGROUND TEXT (ARTFOOD) */}
         <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none z-0">
           <span 
             className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
@@ -73,9 +69,10 @@ export default function KitchenGallery() {
           </span>
         </div>
 
-        <div className="container mx-auto px-4 lg:px-0 lg:pl-[150px] lg:pr-[15vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
+        {/* ПРОМЯНА ТУК: lg:pr-[5vw] вместо lg:pr-[15vw] за преместване надясно */}
+        <div className="container mx-auto px-4 lg:px-0 lg:pl-[150px] lg:pr-[5vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
           
-          {/* TEXT AREA - Напълно независими стилове за мобилни/десктоп */}
+          {/* TEXT AREA */}
           <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-6 lg:mb-0">
             <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[10px] lg:text-[10px] font-bold mb-2 lg:mb-16">
               Culinary Heritage
@@ -84,8 +81,7 @@ export default function KitchenGallery() {
               Вкусът <br className="hidden lg:block" /> на <br className="hidden lg:block" /> миналото
             </h3>
             
-            {/* Desktop цитат */}
-            <p className="hidden lg:block text-[#212121]/70 text-[18px] font-light italic leading-relaxed max-w-md border-l-2 border-[#722F37]/20 pl-8">
+            <p className="hidden lg:block text-[#212121]/70 text-[18px] font-light italic leading-relaxed max-w-md border-l-2 border-[#722F37]/20 lg:pl-8">
               "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
             </p>
           </div>
@@ -93,7 +89,7 @@ export default function KitchenGallery() {
           {/* IMAGES AREA */}
           <div className="w-full lg:w-[45%] relative">
             
-            {/* MOBILE ONLY: CAROUSEL (Snap Scroll) - Не зависи от JS скрола на браузъра */}
+            {/* MOBILE ONLY */}
             <div className="block lg:hidden w-full">
               <div 
                 onScroll={handleMobileScroll}
@@ -116,7 +112,6 @@ export default function KitchenGallery() {
                 ))}
               </div>
               
-              {/* Скрол индикатор (Dots) */}
               <div className="flex justify-center gap-2 mt-2">
                 {dishes.map((_, i) => (
                   <div 
@@ -126,7 +121,6 @@ export default function KitchenGallery() {
                 ))}
               </div>
 
-              {/* Мобилен цитат - Под снимките, за да не пречи горе */}
               <div className="mt-8 px-6 text-center">
                 <p className="text-[#212121]/70 text-[12px] font-light italic leading-relaxed">
                    "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
@@ -134,7 +128,7 @@ export default function KitchenGallery() {
               </div>
             </div>
 
-            {/* DESKTOP ONLY: ORIGINAL STACKED ANIMATION - Не е пипана */}
+            {/* DESKTOP ONLY */}
             <div className="hidden lg:flex relative h-[80vh] w-full items-center justify-end">
               {dishes.map((dish, index) => (
                 <div 
