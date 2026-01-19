@@ -14,7 +14,6 @@ export default function KitchenGallery() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Следене на активната карта за точките (dots) на мобилни
   const handleScrollDots = (e) => {
     if (window.innerWidth >= 1024) return;
     const scrollLeft = e.target.scrollLeft;
@@ -31,7 +30,6 @@ export default function KitchenGallery() {
       const progress = Math.min(Math.max(-rect.top / (rect.height - windowHeight), 0), 1);
       setScrollProgress(progress);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -55,65 +53,61 @@ export default function KitchenGallery() {
   };
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] flex flex-col justify-center py-6 lg:py-0">
+    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] flex flex-col justify-center py-4 lg:py-0">
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden">
         
-        {/* DESKTOP BACKGROUND TEXT */}
-        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none z-0">
-          <span className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap" style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}>
-            Artfood
-          </span>
-        </div>
-
         <div className="container mx-auto px-4 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
           
-          {/* TEXT SIDE - Оптимизиран за iPhone 12 Pro */}
-          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-4 lg:mb-0">
-            <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[9px] lg:text-[10px] font-bold mb-2 lg:mb-16">
+          {/* TEXT SIDE - Намалени разстояния за iPhone 12 Pro */}
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-6 lg:mb-0">
+            <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[9px] font-bold mb-2 lg:mb-16">
               Culinary Heritage
             </h2>
-            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-tight uppercase mb-3 lg:mb-12">
+            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] uppercase mb-3 lg:mb-12">
               Вкусът <br className="hidden lg:block" /> на <br className="hidden lg:block" /> миналото
             </h3>
-            <p className="text-[#212121]/70 text-[12px] lg:text-[18px] font-light italic leading-relaxed max-w-[260px] lg:max-w-md mx-auto lg:mx-0 lg:border-l-2 border-[#722F37]/20 lg:pl-8">
+            <p className="text-[#212121]/70 text-[12px] lg:text-[17px] font-light italic leading-relaxed max-w-[280px] lg:max-w-md mx-auto lg:mx-0 lg:border-l border-[#722F37]/20 lg:pl-8">
               "Всяка чиния е разказ, писан преди два века."
             </p>
           </div>
 
-          {/* IMAGES SIDE */}
+          {/* IMAGES SIDE - ПОПРАВЕНА МОБИЛНА ВИЗИЯ */}
           <div className="w-full lg:w-[55%] relative">
             
-            {/* MOBILE CAROUSEL - Peek effect & Dots */}
             <div className="block lg:hidden w-full">
               <div 
                 ref={scrollContainerRef}
                 onScroll={handleScrollDots}
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-10 pb-4"
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-6 px-12 pb-6"
               >
                 {dishes.map((dish) => (
-                  <div key={`mob-${dish.id}`} className="snap-center shrink-0 w-[75vw] bg-white p-3 pb-8 shadow-lg">
-                    <div className="relative aspect-[4/5] overflow-hidden">
+                  <div key={`mob-${dish.id}`} className="snap-center shrink-0 w-[72vw] flex flex-col items-center">
+                    {/* Снимката вече няма "бокс" около нея, а само много фина мека сянка */}
+                    <div className="relative w-full aspect-[4/5] overflow-hidden rounded-sm shadow-[0_15px_35px_-10px_rgba(0,0,0,0.2)]">
                       <Image src={dish.img} alt={dish.title} fill className="object-cover" />
                     </div>
-                    <div className="text-center mt-3">
-                      <span className="text-[#212121]/60 font-serif italic text-[11px] tracking-widest uppercase">{dish.title}</span>
+                    {/* Текстът под снимката е чист, без бял фон */}
+                    <div className="mt-5 text-center">
+                      <span className="text-[#212121]/80 font-serif italic text-[12px] tracking-[0.2em] uppercase">
+                        {dish.title}
+                      </span>
                     </div>
                   </div>
                 ))}
               </div>
               
-              {/* INDICATOR DOTS */}
-              <div className="flex justify-center gap-2 mt-2">
+              {/* INDICATOR DOTS - По-фини */}
+              <div className="flex justify-center gap-3 mt-2">
                 {dishes.map((_, i) => (
                   <div 
                     key={i} 
-                    className={`h-1 transition-all duration-300 ${activeIndex === i ? "w-4 bg-[#722F37]" : "w-1 bg-[#212121]/20"}`}
+                    className={`h-[2px] transition-all duration-500 ${activeIndex === i ? "w-6 bg-[#722F37]" : "w-2 bg-[#212121]/10"}`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* DESKTOP STACKED */}
+            {/* DESKTOP STACKED (Без промяна) */}
             <div className="hidden lg:flex relative h-[80vh] w-full items-center justify-end">
               {dishes.map((dish, index) => (
                 <div key={`dt-${dish.id}`} style={getStyle(index)} className="absolute lg:w-[400px] bg-white lg:p-4 lg:pb-20 shadow-2xl origin-bottom">
