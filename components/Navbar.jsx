@@ -258,7 +258,7 @@ export default function Navbar() {
           )}
         </AnimatePresence>
 
-        {/* --- MOBILE STICKY BAR (FIXED ALIGNMENT) --- */}
+        {/* --- MOBILE STICKY BAR (STABLE FIX) --- */}
         <AnimatePresence>
           {scrolled && !isOpen && !isTransitioning && (
             <motion.div 
@@ -266,7 +266,8 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className="lg:hidden fixed bottom-0 left-0 w-full z-[110]"
+              // ПРОМЯНА: Слагаме bg-white и padding тук, на главния контейнер.
+              className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-white pb-[env(safe-area-inset-bottom)]"
             >
               <div className="w-full py-2 bg-[#F5F2ED] text-center border-t border-[#212121]/5 shadow-inner">
                  <p className="text-[#212121] text-[9px] uppercase tracking-[0.2em] font-bold opacity-70">
@@ -279,9 +280,10 @@ export default function Navbar() {
                 {/* BUTTON 1: PHONE */}
                 <Link 
                   href="tel:+359888000000" 
-                  className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-auto min-h-[64px] pb-[env(safe-area-inset-bottom)]"
+                  // ПРОМЯНА: Фиксирано h-16, без h-auto, без padding-bottom
+                  className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-16"
                 >
-                  <div className="h-16 w-full flex items-center justify-center">
+                  <div className="h-full w-full flex items-center justify-center">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                   </div>
                 </Link>
@@ -289,9 +291,10 @@ export default function Navbar() {
                 {/* BUTTON 2: RESERVATION */}
                 <Link 
                   href="/reservation" 
-                  className="col-span-3 flex flex-col bg-white group active:bg-[#212121] transition-colors duration-300 h-auto min-h-[64px] pb-[env(safe-area-inset-bottom)]"
+                   // ПРОМЯНА: Фиксирано h-16
+                  className="col-span-3 flex flex-col bg-white group active:bg-[#212121] transition-colors duration-300 h-16"
                 >
-                  <div className="h-16 w-full flex items-center justify-center">
+                  <div className="h-full w-full flex items-center justify-center">
                     <span className="text-[#212121] group-active:text-white uppercase tracking-[0.4em] text-[11px] font-bold">BOOK A TABLE</span>
                   </div>
                 </Link>
@@ -301,9 +304,10 @@ export default function Navbar() {
                   href="https://maps.google.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="col-span-1 flex flex-col bg-white border-l border-[#212121]/5 active:bg-gray-100 h-auto min-h-[64px] pb-[env(safe-area-inset-bottom)]"
+                   // ПРОМЯНА: Фиксирано h-16
+                  className="col-span-1 flex flex-col bg-white border-l border-[#212121]/5 active:bg-gray-100 h-16"
                 >
-                  <div className="h-16 w-full flex items-center justify-center">
+                  <div className="h-full w-full flex items-center justify-center">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                   </div>
                 </a>
