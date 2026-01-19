@@ -235,7 +235,7 @@ export default function Navbar() {
               // Променихме структурата тук:
               // 1. bg-[#F5F2ED] е сложен на основния container, за да запълни всичко до долу.
               // 2. pb-[env(safe-area-inset-bottom)] гарантира, че бутоните са над чертата, но фонът е зад нея.
-              className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-[#F5F2ED] border-t border-[#212121]/10 pb-[env(safe-area-inset-bottom)]"
+            
             >
               <div className="grid grid-cols-5 h-16 w-full">
                 <Link href="tel:+359888000000" className="col-span-1 flex flex-col border-r border-[#212121]/5 bg-white active:bg-gray-100 h-full">
