@@ -91,7 +91,7 @@ export default function KitchenGallery() {
           </div>
 
           {/* IMAGES AREA */}
-          <div className="w-full lg:w-[55%] relative">
+          <div className="w-full lg:w-[45%] relative">
             
             {/* MOBILE ONLY: CAROUSEL (Snap Scroll) - Не зависи от JS скрола на браузъра */}
             <div className="block lg:hidden w-full">
