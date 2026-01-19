@@ -55,24 +55,29 @@ export default function Events() {
       <div className="container mx-auto px-12 lg:px-24">
         
         {/* ЗАГЛАВНА СЕКЦИЯ */}
-        <div className="flex flex-col lg:flex-row justify-between items-baseline mb-32 border-b border-[#212121]/10 pb-12">
-          <div className="overflow-visible pr-12">
+        <div className="flex flex-col items-center text-center lg:flex-row lg:justify-between lg:items-baseline lg:text-left mb-32 border-b border-[#212121]/10 pb-4 lg:pb-12">
+          
+          <div className="overflow-visible lg:pr-12">
             <motion.h1 
               variants={revealVariants}
               initial="hidden"
               animate="visible"
-              className="text-[#212121] text-6xl lg:text-[7vw] font-serif italic uppercase tracking-tighter flex items-baseline"
+              className="text-[#212121] text-6xl lg:text-[7vw] font-serif italic uppercase tracking-tighter flex flex-col items-center lg:flex-row lg:items-baseline leading-none"
             >
-              Програма 
-              <span className="text-[#212121]/20 mx-4 font-light not-italic text-[5vw]">/</span> 
-              <span className="text-[#722F37] text-[4vw] pr-8">2025</span>
+              <span>Програма</span> 
+              
+              <div className="flex items-baseline -mt-2 self-end lg:mt-0 lg:ml-6 lg:self-auto">
+                <span className="text-[#212121]/20 mx-2 lg:mx-4 font-light not-italic text-2xl lg:text-[5vw]">/</span> 
+                <span className="text-[#722F37] text-2xl lg:text-[4vw]">2025</span>
+              </div>
             </motion.h1>
           </div>
+
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.4 }}
             transition={{ delay: 0.5 }}
-            className="text-[#212121] uppercase tracking-[0.4em] text-[10px] font-bold mt-8 lg:mt-0"
+            className="text-[#212121] uppercase tracking-[0.4em] text-[10px] font-bold mt-14 lg:mt-0"
           >
             Избрани преживявания
           </motion.p>
@@ -104,12 +109,18 @@ export default function Events() {
                 </motion.div>
 
                 {/* ТЕКСТОВА ЧАСТ */}
-                <div className="w-full lg:w-[45%] flex flex-col items-start text-left pr-4">
+                {/* ПРОМЕНИ ТУК:
+                   1. items-center text-center (за мобилни)
+                   2. lg:items-start lg:text-left (връщане за десктоп)
+                   3. px-4 (центриран padding за мобилни), lg:pr-4 lg:pl-0 (за десктоп)
+                */}
+                <div className="w-full lg:w-[45%] flex flex-col items-center text-center lg:items-start lg:text-left px-4 lg:pr-4 lg:pl-0">
                   <span className="text-[#722F37] text-[10px] font-bold uppercase tracking-[0.6em] mb-6 block">
                     {event.type}
                   </span>
                   
-                  <div className="overflow-visible mb-8 pr-10">
+                  {/* Заглавие: премахваме pr-10 на мобилни, за да е центрирано */}
+                  <div className="overflow-visible mb-8 pr-0 lg:pr-10">
                     <motion.h2 
                       variants={revealVariants}
                       initial="hidden"
@@ -122,18 +133,18 @@ export default function Events() {
                     </motion.h2>
                   </div>
 
-                  <div className="flex items-center gap-8 text-[#212121]/50 text-sm font-serif italic mb-10">
+                  {/* Дата/Час: justify-center на мобилни */}
+                  <div className="flex items-center justify-center lg:justify-start gap-8 text-[#212121]/50 text-sm font-serif italic mb-10">
                     <span>{event.date}</span>
                     <span className="w-px h-4 bg-[#212121]/20"></span>
                     <span>{event.time}</span>
                   </div>
 
-                  {/* БУТОН ЗА РЕЗЕРВАЦИЯ - ФИКСИРАНА БЯЛА ЛИНИЯ */}
+                  {/* БУТОН ЗА РЕЗЕРВАЦИЯ: Вече е центриран заради flex-col items-center на родителя */}
                   <button className="group relative px-10 py-4 border-2 border-[#722F37]/40 overflow-hidden rounded-none flex items-center justify-center outline-none mb-10 transition-all duration-700 hover:border-[#722F37]">
                     <span className="relative z-10 text-[#212121] text-[10px] font-bold uppercase tracking-[0.4em] transition-colors duration-500 group-hover:text-white">
                       Резервирай място
                     </span>
-                    {/* scale-105 и -inset-[1px] гарантират, че няма да има луфтове в краищата */}
                     <div className="absolute -inset-[1px] bg-[#722F37] translate-y-[101%] transition-transform duration-700 ease-out group-hover:translate-y-0 scale-105"></div>
                   </button>
 
@@ -176,7 +187,7 @@ export default function Events() {
               </motion.p>
             </div>
             
-            {/* БУТОН ЗА НЕДЕЛЯ - ФИКСИРАНА БЯЛА ЛИНИЯ */}
+            {/* БУТОН ЗА НЕДЕЛЯ */}
             <Link 
               href="/contact" 
               className="group relative px-16 py-6 border-2 border-[#722F37]/40 overflow-hidden rounded-none flex items-center justify-center outline-none transition-all duration-700 hover:border-[#722F37]"

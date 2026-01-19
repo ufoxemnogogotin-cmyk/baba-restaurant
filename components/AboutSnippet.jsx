@@ -34,35 +34,41 @@ export default function AboutSnippet() {
 
   return (
     <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-40 lg:pb-64 overflow-hidden">
-      <div className="container mx-auto px-12 lg:px-24 relative">
+      
+      {/* CONTAINER:
+         Mobile: px-6 (стандартно)
+         Desktop: lg:pl-[320px] (твоето изискване)
+      */}
+      <div className="container lg:w-full lg:max-w-none mx-auto px-6 lg:px-0 lg:pl-[320px] lg:pr-[235px] relative">
         
-        <div className="mb-16 lg:mb-20">
+        {/* HEADER: Centered on mobile, Left on desktop */}
+        <div className="mb-12 lg:mb-20 flex flex-col items-center lg:items-start">
           <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold mb-6 opacity-40">Наследието</h2>
           <div className="h-[1px] w-24 bg-[#722F37]/30"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center lg:items-start">
           
-          <div className="lg:col-span-8">
-            {/* ЗАГЛАВИЕ СТРИКТНО НА ДВА РЕДА - БЕЗ КЛИПВАНЕ */}
+          <div className="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
+            {/* ЗАГЛАВИЕ: Centered flex col on mobile */}
             <motion.h3 
               variants={titleContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
-              className="text-[#212121] text-5xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-12 flex flex-col gap-0 overflow-visible"
+              className="text-[#212121] text-5xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 overflow-visible w-full"
             >
-              {/* ПЪРВИ РЕД - overflow-visible и pr-10 за италик наклона */}
-              <div className="overflow-visible block pr-10">
+              {/* ПЪРВИ РЕД: pr-0 on mobile, pr-10 on desktop */}
+              <div className="overflow-visible block pr-0 lg:pr-10">
                 {"Където миналото".split(" ").map((word, i) => (
-                  <motion.span key={i} variants={wordAnimation} className="inline-block mr-4">
+                  <motion.span key={i} variants={wordAnimation} className="inline-block mx-2 lg:mx-0 lg:mr-4">
                     {word}
                   </motion.span>
                 ))}
               </div>
               
-              {/* ВТОРИ РЕД - pr-20 за безопасност на финалното "В" */}
-              <div className="overflow-visible block pr-20">
+              {/* ВТОРИ РЕД: pr-0 on mobile, pr-20 on desktop */}
+              <div className="overflow-visible block pr-0 lg:pr-20">
                 <motion.span 
                   variants={wordAnimation}
                   className="text-[#722F37] lg:ml-[12%] inline-block"
@@ -72,7 +78,7 @@ export default function AboutSnippet() {
               </div>
             </motion.h3>
             
-            <div className="max-w-xl lg:ml-[12%] space-y-8">
+            <div className="max-w-xl mx-auto lg:mx-0 lg:ml-[12%] space-y-6 lg:space-y-8">
               <p className="text-[#212121]/70 text-lg leading-relaxed italic">
                 BABA не е просто дестинация, а преживяване, вдъхновено от аристократизма на 19-ти век и смелостта на съвременното изкуство.
               </p>
@@ -82,7 +88,8 @@ export default function AboutSnippet() {
             </div>
           </div>
 
-          <div className="lg:col-span-4 flex flex-col items-end justify-center h-full pt-12 lg:pt-32">
+          {/* IMAGE COLUMN: Centered on mobile, End on desktop */}
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center h-full pt-12 lg:pt-32 w-full">
             <div className="relative w-full aspect-square max-w-[280px] mb-12">
                <div 
                  className="absolute inset-0 rotate-12 scale-150 opacity-10"
@@ -105,7 +112,7 @@ export default function AboutSnippet() {
                </div>
             </div>
             
-            {/* БУТОН: border-2 и чиста анимация от долу нагоре */}
+            {/* БУТОН */}
             <Link 
               href="/about" 
               className="group relative px-12 py-5 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none flex items-center justify-center rounded-none"

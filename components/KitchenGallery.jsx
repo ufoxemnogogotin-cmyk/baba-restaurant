@@ -17,7 +17,6 @@ export default function KitchenGallery() {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      // Изчисляване на прогреса спрямо височината на секцията (350vh)
       const progress = Math.min(Math.max(-rect.top / (rect.height - windowHeight), 0), 1);
       setScrollProgress(progress);
     };
@@ -32,17 +31,18 @@ export default function KitchenGallery() {
     const start = index * step;
     const end = (index + 1) * step;
 
-    let x = 150; 
+    let x = index === 0 ? 0 : 150; 
+
     if (scrollProgress > start && scrollProgress <= end) {
       const localProg = (scrollProgress - start) / (end - start);
-      x = 150 - (localProg * 150);
+      x = index === 0 ? 0 : 150 - (localProg * 150);
     } else if (scrollProgress > end) {
       x = 0;
     }
 
     return {
-      opacity: scrollProgress > start ? 1 : 0,
-      transform: `translateX(${x}%) rotate(${index * 1.5}deg)`,
+      opacity: index === 0 ? 1 : (scrollProgress > start ? 1 : 0),
+      transform: `translateX(${x}%) rotate(${index * 2}deg)`,
       zIndex: 10 + index,
       transition: 'transform 0.1s linear, opacity 0.3s ease-out'
     };
@@ -50,64 +50,71 @@ export default function KitchenGallery() {
 
   return (
     <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] h-[350vh]">
-      <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden lg:pl-[120px]">
+      
+      {/* STICKY CONTAINER */}
+      {/* Промяна: h-[100dvh] гарантира, че се събира точно в екрана на телефона */}
+      <div className="sticky top-0 h-[100dvh] lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden">
         
-        {/* ARTFOOD - ФОНОВ ПАРАЛАКС ТЕКСТ В ЦВЯТ #BAC095 */}
-        <div className="absolute bottom-10 left-0 w-full flex justify-start pointer-events-none overflow-hidden z-0">
+        {/* BACKGROUND TEXT (ARTFOOD) */}
+        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none overflow-hidden z-0">
           <span 
-            className="text-[#BAC095]/15 text-[25vw] font-serif italic whitespace-nowrap transition-transform duration-150 ease-out"
-            style={{ 
-              transform: `translateX(${(scrollProgress * 60) - 20}%) translateY(25%)` 
-            }}
+            className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
+            style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}
           >
             Artfood
           </span>
         </div>
 
-        <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-20 w-full relative z-10">
+        {/* MAIN CONTENT CONTAINER */}
+        <div className="container lg:w-full lg:max-w-1200 mx-auto px-6 md:px-12 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full relative h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between z-10 py-4 lg:py-0">
           
-          {/* ТЕКСТОВА ЧАСТ - ЦВЯТ #212121 */}
-          <div className="lg:w-1/3 space-y-12 z-50 mb-20 relative">
-            <div className="space-y-4">
-              <h2 className="text-[#212121]/40 uppercase tracking-[1em] text-[10px] font-bold">
-                Culinary Heritage
-              </h2>
-              <h3 className="text-[#212121] text-6xl md:text-8xl font-serif italic leading-[0.9] tracking-tighter uppercase">
-                Вкусът на <br /> миналото
-              </h3>
-            </div>
-            <p className="text-[#212121]/70 text-lg font-light italic leading-relaxed max-w-sm">
-              "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
-            </p>
+          {/* MOBILE TITLE - Намален margin-bottom */}
+          <div className="w-full lg:hidden text-center mb-2 flex-shrink-0 z-[50]">
+            <h2 className="text-[#212121]/40 uppercase tracking-[0.5em] text-[10px] font-bold">
+              Culinary Heritage
+            </h2>
           </div>
 
-          {/* ГАЛЕРИЯ С ПОЛАРОИД ЕФЕКТ */}
-          <div className="lg:w-2/3 relative h-[650px] w-full flex items-center justify-center">
+          {/* IMAGES SIDE - Order 1 на мобилни (най-отгоре) */}
+          {/* Промяна: h-[40vh] на мобилни, за да остави място за текста долу */}
+          <div className="relative h-[45vh] sm:h-[50vh] lg:h-[80vh] w-full lg:w-[55%] flex items-center justify-center lg:justify-end order-1 lg:order-2 flex-shrink-0 mb-4 lg:mb-0">
             {dishes.map((dish, index) => (
               <div 
                 key={dish.id}
                 style={getStyle(index)}
-                className="absolute w-[420px] bg-white p-3 pb-16 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.08)]"
+                // Mobile: w-[65%] за да не е твърде широко
+                className="absolute w-[65%] sm:w-[320px] lg:w-[400px] bg-white p-2 pb-8 lg:p-4 lg:pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom"
               >
-                <div className="relative aspect-[4/5] overflow-hidden grayscale-[10%] transition-all duration-700 hover:grayscale-0">
-                  <Image 
-                    src={dish.img} 
-                    alt={dish.title} 
-                    fill 
-                    className="object-cover" 
-                    priority={index === 0} 
-                  />
+                <div className="relative aspect-[3.5/5] overflow-hidden grayscale-[10%]">
+                  <Image src={dish.img} alt={dish.title} fill className="object-cover" priority={index === 0} />
                 </div>
-                
-                {/* Подпис под снимката */}
-                <div className="absolute bottom-5 left-0 w-full text-center">
-                  <span className="text-[#212121]/60 font-serif italic text-base tracking-[0.3em] uppercase">
+                <div className="absolute bottom-2 lg:bottom-6 left-0 w-full text-center px-2">
+                  <span className="text-[#212121]/60 font-serif italic text-[10px] lg:text-[14px] tracking-[0.2em] uppercase block truncate">
                     {dish.title}
                   </span>
                 </div>
               </div>
             ))}
           </div>
+
+          {/* TEXT SIDE - Order 2 на мобилни (отдолу) */}
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start order-2 lg:order-1 text-center lg:text-left flex-shrink-0">
+            <h2 className="hidden lg:block text-[#212121]/40 uppercase tracking-[0.8em] text-[10px] font-bold mb-16 opacity-40">
+              Culinary Heritage
+            </h2>
+            
+            {/* Промяна: На мобилен text-3xl, за да се събере. На Desktop си остава огромно 7.5vw */}
+            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1] tracking-tighter uppercase mb-2 lg:mb-12">
+  Вкусът <br className="hidden lg:block" /> 
+  на <br className="hidden lg:block" /> 
+  миналото
+</h3>
+            
+            <p className="text-[#212121]/70 text-[11px] lg:text-[18px] font-light italic leading-relaxed max-w-[280px] lg:max-w-md mx-auto lg:mx-0 border-none lg:border-l-2 border-[#722F37]/20 lg:pl-8">
+              "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
+            </p>
+          </div>
+
         </div>
       </div>
     </section>
