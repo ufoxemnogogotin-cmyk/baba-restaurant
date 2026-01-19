@@ -54,7 +54,6 @@ export default function KitchenGallery() {
   return (
     <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] py-10 lg:py-0">
       
-      {/* Промяна: overflow-hidden е премахнат за мобилни, за да не реже сянката */}
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center lg:overflow-hidden">
         
         {/* BACKGROUND TEXT */}
@@ -64,10 +63,10 @@ export default function KitchenGallery() {
           </span>
         </div>
 
-        <div className="container mx-auto px-4 lg:px-0 lg:pl-[150px] lg:pr-[5vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
+        <div className="container mx-auto px-0 lg:px-0 lg:pl-[150px] lg:pr-[5vw] w-full flex flex-col lg:flex-row items-center justify-between z-10">
           
-          {/* TEXT AREA */}
-          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-6 lg:mb-0">
+          {/* TEXT AREA - Центриран на мобилни, ляво на десктоп */}
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left mb-8 lg:mb-0 px-6 lg:px-0">
             <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[10px] font-bold mb-2 lg:mb-16">
               Culinary Heritage
             </h2>
@@ -82,24 +81,24 @@ export default function KitchenGallery() {
           {/* IMAGES AREA */}
           <div className="w-full lg:w-[45%] relative">
             
-            {/* MOBILE ONLY */}
-            <div className="block lg:hidden w-full overflow-visible">
+            {/* MOBILE ONLY - EDGE TO EDGE CAROUSEL */}
+            <div className="block lg:hidden w-screen overflow-visible relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
               <div 
                 onScroll={handleMobileScroll}
-                /* Добавен pb-12 за място за сянката и по-широк padding отляво/отдясно */
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-6 px-10 pb-12 overflow-y-visible"
+                /* gap-4 и по-голям padding за "peek" ефект без рязане */
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[12vw] pb-16 overflow-y-visible"
               >
                 {dishes.map((dish) => (
                   <div 
                     key={`mob-${dish.id}`} 
-                    /* Мека сянка с по-голям обхват, но по-ниска прозрачност за луксозно усещане */
-                    className="snap-center shrink-0 w-[78vw] bg-white p-2 pb-8 shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
+                    /* Картите са по-близо (w-[76vw]) и със супер мека сянка */
+                    className="snap-center shrink-0 w-[76vw] bg-white p-2 pb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)]"
                   >
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <Image src={dish.img} alt={dish.title} fill className="object-cover" />
                     </div>
-                    <div className="mt-4 text-center">
-                      <span className="text-[#212121]/60 font-serif italic text-[11px] tracking-[0.2em] uppercase">
+                    <div className="mt-6 text-center">
+                      <span className="text-[#212121]/50 font-serif italic text-[11px] tracking-[0.2em] uppercase">
                         {dish.title}
                       </span>
                     </div>
@@ -107,20 +106,21 @@ export default function KitchenGallery() {
                 ))}
               </div>
               
-              <div className="flex justify-center gap-2 mt-2">
+              {/* Индикатори */}
+              <div className="flex justify-center gap-3 mt-0">
                 {dishes.map((_, i) => (
-                  <div key={i} className={`h-[2px] transition-all duration-300 ${activeIndex === i ? "w-6 bg-[#722F37]" : "w-2 bg-[#212121]/10"}`} />
+                  <div key={i} className={`h-[1px] transition-all duration-500 ${activeIndex === i ? "w-8 bg-[#722F37]" : "w-3 bg-[#212121]/10"}`} />
                 ))}
               </div>
 
-              <div className="mt-8 px-6 text-center">
-                <p className="text-[#212121]/70 text-[12px] font-light italic leading-relaxed">
+              <div className="mt-10 px-10 text-center">
+                <p className="text-[#212121]/60 text-[12px] font-light italic leading-relaxed">
                    "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
                 </p>
               </div>
             </div>
 
-            {/* DESKTOP ONLY */}
+            {/* DESKTOP ONLY - ORIGINAL */}
             <div className="hidden lg:flex relative h-[80vh] w-full items-center justify-end">
               {dishes.map((dish, index) => (
                 <div key={`dt-${dish.id}`} style={getDesktopStyle(index)} className="absolute lg:w-[400px] bg-white lg:p-4 lg:pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom">
