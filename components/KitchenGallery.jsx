@@ -14,7 +14,7 @@ export default function KitchenGallery() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // --- ЛОГИКА САМО ЗА ДЕСКТОП (СКРОЛ АНИМАЦИЯ) ---
+  // --- ЛОГИКА ЗА ДЕСКТОП (СКРОЛ АНИМАЦИЯ) ---
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -28,24 +28,20 @@ export default function KitchenGallery() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // --- ЛОГИКА САМО ЗА МОБИЛЕН (СЛАЙДЪР ИНДИКАТОРИ) ---
+  // --- ЛОГИКА ЗА МОБИЛЕН СЛАЙДЪР (ИНДИКАТОРИ) ---
   const handleMobileScroll = () => {
     if (mobileSliderRef.current) {
       const scrollLeft = mobileSliderRef.current.scrollLeft;
-      const width = mobileSliderRef.current.offsetWidth; // Ширината на видимата част
-      const center = scrollLeft + (width / 2); // Центъра на екрана
+      // Изчисляваме индекса на база приблизителната ширина на една карта
+      const cardWidth = window.innerWidth * 0.85; 
+      const newIndex = Math.round(scrollLeft / cardWidth);
       
-      // Тъй като картите са по-малки от екрана, изчисляваме на база децата
-      // Най-просто: делим скрола на ширината на една карта (приблизително)
-      const newIndex = Math.round(scrollLeft / (window.innerWidth * 0.85));
-      
-      // Ограничаваме индекса да не излиза извън масива
       const clampedIndex = Math.min(Math.max(newIndex, 0), dishes.length - 1);
       setActiveSlide(clampedIndex);
     }
   };
 
-  // --- СТИЛОВЕ ЗА ДЕСКТОП АНИМАЦИЯТА ---
+  // --- СТИЛОВЕ ЗА ДЕСКТОП ---
   const getDesktopStyle = (index) => {
     const animationEnd = 0.85; 
     const step = animationEnd / dishes.length;
@@ -66,17 +62,19 @@ export default function KitchenGallery() {
       transform: `translateX(${x}%) rotate(${index * 2}deg)`,
       zIndex: 10 + index,
       transition: 'transform 0.1s linear, opacity 0.3s ease-out',
-      position: 'absolute' // Важно: Това важи само за десктоп контейнера
+      position: 'absolute'
     };
   };
 
   return (
     <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] h-auto lg:h-[350vh]">
       
-      {/* Sticky Container */}
-      <div className="relative lg:sticky top-0 w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden min-h-[100dvh] lg:h-screen py-12 lg:py-0">
+      {/* ВАЖНО: Премахнахме overflow-hidden от тук за мобилни (стана lg:overflow-hidden).
+         Това позволява на слайдъра да работи свободно.
+      */}
+      <div className="relative lg:sticky top-0 w-full flex flex-col lg:flex-row items-center justify-center lg:overflow-hidden min-h-[100dvh] lg:h-screen py-12 lg:py-0">
         
-        {/* BACKGROUND TEXT (ARTFOOD) - Само за Desktop */}
+        {/* BACKGROUND TEXT - Desktop Only */}
         <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none overflow-hidden z-0">
           <span 
             className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
@@ -86,7 +84,7 @@ export default function KitchenGallery() {
           </span>
         </div>
 
-        {/* MAIN CONTENT CONTAINER */}
+        {/* MAIN CONTENT */}
         <div className="container lg:w-full lg:max-w-1200 mx-auto px-0 md:px-12 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full relative h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between z-10">
           
           {/* MOBILE TITLE */}
@@ -96,19 +94,17 @@ export default function KitchenGallery() {
             </h2>
           </div>
 
-          {/* === ТУК Е ГОЛЯМАТА ПРОМЯНА === */}
-          {/* Разделяме контейнерите за снимки на два напълно независими блока */}
-          
           <div className="w-full flex flex-col items-center order-1 lg:order-2 flex-shrink-0 mb-8 lg:mb-0 lg:w-[55%] lg:relative lg:h-[80vh]">
             
-            {/* 1. МОБИЛЕН СЛАЙДЪР (Видим само до lg) */}
-            {/* Това е чист CSS слайдър, без JS анимации за позиция */}
-            <div className="block lg:hidden w-full relative">
+            {/* === 1. МОБИЛЕН СЛАЙДЪР === */}
+            {/* Използваме custom class 'mobile-slider-container' за видимост */}
+            <div className="mobile-slider-container w-full relative">
               <div 
                 ref={mobileSliderRef}
                 onScroll={handleMobileScroll}
                 className="
                   flex 
+                  flex-nowrap /* Гарантира, че са на един ред */
                   w-full
                   overflow-x-auto 
                   snap-x snap-mandatory 
@@ -117,6 +113,7 @@ export default function KitchenGallery() {
                   pb-4
                   gap-4
                   items-center
+                  touch-pan-x
                 "
               >
                 {dishes.map((dish) => (
@@ -125,7 +122,7 @@ export default function KitchenGallery() {
                     className="
                       bg-white p-2 pb-8 shadow-[0_10px_30px_rgba(0,0,0,0.1)] 
                       relative 
-                      min-w-[85vw] /* Заема 85% от екрана, за да се вижда малко от следващата */
+                      min-w-[85vw] /* Ширина на картата */
                       snap-center 
                       flex-shrink-0
                       rounded-sm
@@ -141,27 +138,27 @@ export default function KitchenGallery() {
                     </div>
                   </div>
                 ))}
-                {/* Празно място накрая, за да може последната карта да се центрира */}
+                {/* Spacer */}
                 <div className="min-w-[4vw] h-full flex-shrink-0 snap-align-none"></div>
               </div>
 
-              {/* ИНДИКАТОРИ (ТОЧКИ) - Само в мобилния контейнер */}
+              {/* ИНДИКАТОРИ */}
               <div className="flex justify-center gap-3 mt-4 w-full">
                 {dishes.map((_, index) => (
                   <div
                     key={index}
                     className={`
-                      h-2 rounded-full transition-all duration-300
-                      ${index === activeSlide ? 'bg-[#722F37] w-8' : 'bg-[#212121]/20 w-2'}
+                      h-1.5 rounded-full transition-all duration-300
+                      ${index === activeSlide ? 'bg-[#722F37] w-8' : 'bg-[#212121]/20 w-1.5'}
                     `}
                   />
                 ))}
               </div>
             </div>
 
-            {/* 2. ДЕСКТОП СТАК (Видим само от lg нагоре) */}
-            {/* Тук ползваме getDesktopStyle за сложните анимации */}
-            <div className="hidden lg:block w-full h-full relative">
+            {/* === 2. ДЕСКТОП ВЕРСИЯ === */}
+            {/* Използваме custom class 'desktop-stack-container' за видимост */}
+            <div className="desktop-stack-container w-full h-full relative hidden">
                {dishes.map((dish, index) => (
                 <div 
                   key={dish.id}
@@ -185,7 +182,7 @@ export default function KitchenGallery() {
 
           </div>
 
-          {/* TEXT SIDE - Без промяна */}
+          {/* TEXT SIDE */}
           <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start order-2 lg:order-1 text-center lg:text-left flex-shrink-0 px-6 lg:px-0">
             <h2 className="hidden lg:block text-[#212121]/40 uppercase tracking-[0.8em] text-[10px] font-bold mb-16 opacity-40">
               Culinary Heritage
@@ -205,14 +202,27 @@ export default function KitchenGallery() {
         </div>
       </div>
       
-      {/* Скриване на скролбара */}
-      <style jsx global>{`
+      {/* CUSTOM CSS ЗА СИГУРНОСТ
+          Това гарантира показването на правилния контейнер,
+          дори ако Tailwind breakpoints не сработват правилно.
+      */}
+      <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
         .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+
+        /* По подразбиране (Мобилно) */
+        .mobile-slider-container { display: block; }
+        .desktop-stack-container { display: none; }
+
+        /* За Десктоп (Над 1024px) */
+        @media (min-width: 1024px) {
+            .mobile-slider-container { display: none; }
+            .desktop-stack-container { display: block; }
         }
       `}</style>
     </section>
