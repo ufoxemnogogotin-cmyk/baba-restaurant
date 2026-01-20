@@ -1,179 +1,147 @@
 "use client";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-// Подредба: Виртуалната разходка заменя Специалитети (id 2) в грида
-const galleryImages = [
-  { id: 1, src: "/loc1.jpg", alt: "Екстериор BABA", span: "md:col-span-2 md:row-span-2", title: "Панорамна Тераса" },
-  { id: 3, src: "/loc2.jpg", alt: "Интериор BABA", span: "md:col-span-1 md:row-span-1", title: "Интериор" },
-  { id: 4, src: "/loc4.jpg", alt: "Каменен Бар", span: "md:col-span-1 md:row-span-2", title: "Коктейл Бар" },
-  { id: 5, src: "/dish2.jpg", alt: "Вкусове BABA", span: "md:col-span-2 md:row-span-1", title: "Вкусове & Цветове" },
-  { id: 2, src: "/dish1.jpg", alt: "Специалитети BABA", span: "md:col-span-1 md:row-span-1", title: "Специалитети" },
+const dishes = [
+  { id: 1, title: "Модерна Традиция", img: "/dish1.jpg" },
+  { id: 2, title: "Артизански Детайл", img: "/dish2.jpg" },
+  { id: 3, title: "Балканска Душа", img: "/dish3.jpg" },
 ];
 
-export default function GalleryGrid() {
-  const [selectedImg, setSelectedImg] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Забрана на скрола при отворен модал
-  useEffect(() => {
-    if (selectedImg) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => { document.body.style.overflow = "unset"; };
-  }, [selectedImg]);
+export default function KitchenGallery() {
+  const containerRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setSelectedImg(null);
+    const handleScroll = () => {
+      if (!containerRef.current || window.innerWidth < 1024) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const progress = Math.min(
+        Math.max(-rect.top / (rect.height - windowHeight), 0),
+        1
+      );
+      setScrollProgress(progress);
     };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const openModal = (img, index) => {
-    setSelectedImg(img);
-    setCurrentIndex(index);
-  };
+  const getDesktopStyle = (index) => {
+    const animationEnd = 0.85;
+    const step = animationEnd / dishes.length;
+    const start = index * step;
+    const end = (index + 1) * step;
+    let x = index === 0 ? 0 : 150;
 
-  const nextImg = (e) => {
-    e.stopPropagation();
-    const nextIndex = (currentIndex + 1) % galleryImages.length;
-    setSelectedImg(galleryImages[nextIndex]);
-    setCurrentIndex(nextIndex);
-  };
+    if (scrollProgress > start && scrollProgress <= end) {
+      const localProg = (scrollProgress - start) / (end - start);
+      x = index === 0 ? 0 : 150 - localProg * 150;
+    } else if (scrollProgress > end) {
+      x = 0;
+    }
 
-  const prevImg = (e) => {
-    e.stopPropagation();
-    const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-    setSelectedImg(galleryImages[prevIndex]);
-    setCurrentIndex(prevIndex);
+    return {
+      opacity: index === 0 ? 1 : scrollProgress > start ? 1 : 0,
+      transform: `translateX(${x}%) rotate(${index * 2}deg)`,
+      zIndex: 10 + index,
+      transition: "transform 0.1s linear, opacity 0.3s ease-out",
+    };
   };
 
   return (
-    <div className="relative">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[250px] lg:auto-rows-[300px] relative z-10">
-        
-        {/* ПЪРВА СНИМКА (ПАНОРАМА) */}
-        {galleryImages.slice(0, 1).map((img) => (
-          <motion.div
-            key={img.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.8 }}
-            onClick={() => openModal(img, 0)}
-            className={`relative overflow-hidden group cursor-pointer ${img.span}`}
+    <section
+      ref={containerRef}
+      className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] min-h-[100dvh] py-10 lg:py-0"
+    >
+      <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center">
+
+        {/* BACKGROUND TEXT – DESKTOP */}
+        <div className="hidden lg:flex absolute bottom-12 left-0 w-full pointer-events-none z-0">
+          <span
+            className="text-[#BAC095]/10 text-[25vw] font-serif italic whitespace-nowrap leading-none"
+            style={{ transform: `translateX(${scrollProgress * 40 - 10}%)` }}
           >
-            <Image src={img.src} alt={img.alt} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#212121]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-              <p className="text-white font-serif italic text-xl">{img.title}</p>
-            </div>
-            <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#722F37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20" />
-          </motion.div>
-        ))}
+            Artfood
+          </span>
+        </div>
 
-        {/* ВИРТУАЛНА РАЗХОДКА (НА МЯСТОТО НА СПЕЦИАЛИТЕТИ) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="hidden md:flex items-center justify-center relative overflow-hidden h-full w-full bg-[#212121] group cursor-pointer"
-        >
-          <Image src="/private-event.jpg" alt="Виртуална разходка" fill className="object-cover opacity-40 grayscale group-hover:scale-110 transition-transform duration-1000" />
-          <div className="relative z-20 text-center px-6">
-            <div className="mb-4 flex justify-center text-white/80 group-hover:text-[#722F37] transition-colors duration-500">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <circle cx="12" cy="12" r="10" /><path d="M12 8v4l3 3" />
-                </svg>
-            </div>
-            <p className="text-[9px] uppercase tracking-[0.4em] text-white/60 mb-1">Интерактивно</p>
-            <h3 className="text-white font-serif italic text-xl uppercase tracking-tighter leading-none">Виртуална <br/> Разходка</h3>
+        <div className="container mx-auto w-full flex flex-col lg:flex-row items-center justify-between z-10">
+
+          {/* TEXT */}
+          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start text-center lg:text-left px-6">
+            <h2 className="text-[#212121]/40 uppercase tracking-[0.4em] text-[10px] font-bold mb-2 lg:mb-16">
+              Culinary Heritage
+            </h2>
+
+            <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] uppercase mb-6 lg:mb-12">
+              Вкусът <br className="hidden lg:block" /> на <br className="hidden lg:block" /> миналото
+            </h3>
+
+            <p className="hidden lg:block text-[#212121]/70 text-[18px] font-light italic leading-relaxed max-w-md border-l-2 border-[#722F37]/20 lg:pl-8">
+              "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
+            </p>
           </div>
-          <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#722F37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20" />
-        </motion.div>
 
-        {/* ОСТАНАЛИТЕ СНИМКИ ОТ ГАЛЕРИЯТА */}
-        {galleryImages.slice(1).map((img, index) => (
-          <motion.div
-            key={img.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: (index + 3) * 0.1, duration: 0.8 }}
-            onClick={() => openModal(img, index + 1)}
-            className={`relative overflow-hidden group cursor-pointer ${img.span}`}
-          >
-            <Image src={img.src} alt={img.alt} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#212121]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-              <p className="text-white font-serif italic text-xl">{img.title}</p>
+          {/* ================= MOBILE – HORIZONTAL CARDS ================= */}
+          <div className="block lg:hidden w-screen overflow-hidden relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+            <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-[10vw] pb-12 no-scrollbar">
+              {dishes.map((dish) => (
+                <div
+                  key={dish.id}
+                  className="snap-center shrink-0 w-[80vw] bg-white p-2 pb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)]"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <Image
+                      src={dish.img}
+                      alt={dish.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="mt-6 text-center">
+                    <span className="text-[#212121]/50 font-serif italic text-[12px] tracking-[0.2em] uppercase">
+                      {dish.title}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
-            <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#722F37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20" />
-          </motion.div>
-        ))}
-
-        {/* МАКСИМАЛНО УВЕЛИЧЕНО И СИВО ЛОГО */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="hidden md:flex items-center justify-center relative overflow-hidden h-full w-full"
-        >
-          <div className="relative w-[500px] h-[250px] opacity-20 grayscale brightness-0 transition-transform duration-700 hover:scale-110">
-            <Image src="/logo.svg" alt="BABA Grid Logo" fill className="object-contain" />
           </div>
-        </motion.div>
+
+          {/* ================= DESKTOP – ORIGINAL STACK ================= */}
+          <div className="hidden lg:flex w-[45%] relative h-[80vh] items-center justify-end">
+            {dishes.map((dish, index) => (
+              <div
+                key={dish.id}
+                style={getDesktopStyle(index)}
+                className="absolute w-[400px] bg-white p-4 pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom"
+              >
+                <div className="relative aspect-[3.5/5] overflow-hidden">
+                  <Image
+                    src={dish.img}
+                    alt={dish.title}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                </div>
+                <div className="absolute bottom-6 left-0 w-full text-center px-2">
+                  <span className="text-[#212121]/60 font-serif italic text-[14px] tracking-[0.2em] uppercase block truncate">
+                    {dish.title}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
       </div>
 
-      {/* МОДАЛ / LIGHTBOX */}
-      <AnimatePresence>
-        {selectedImg && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImg(null)}
-            className="fixed inset-0 z-[1000] bg-[#212121]/98 backdrop-blur-md flex items-center justify-center p-4 md:p-8 cursor-zoom-out"
-          >
-            <button onClick={() => setSelectedImg(null)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-all z-[1100] p-4 outline-none">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-
-            <div className="relative flex items-center justify-center w-full max-w-5xl h-full">
-                <button onClick={prevImg} className="absolute left-0 md:-left-24 text-white/70 hover:text-white transition-all z-[1050] p-4 text-6xl font-light outline-none"> ← </button>
-                <button onClick={nextImg} className="absolute right-0 md:-right-24 text-white/70 hover:text-white transition-all z-[1050] p-4 text-6xl font-light outline-none"> → </button>
-
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white p-4 pb-16 md:p-6 md:pb-24 shadow-2xl relative w-full max-w-lg lg:max-w-xl cursor-default mx-auto"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F5F2ED]">
-                    <Image src={selectedImg.src} alt={selectedImg.alt} fill className="object-cover" priority />
-                  </div>
-                  <div className="mt-6 text-center px-4">
-                    <p className="text-[#212121] font-serif italic text-2xl md:text-3xl leading-none">{selectedImg.title}</p>
-                  </div>
-                  <div className="absolute bottom-4 md:bottom-8 left-6 md:left-10 right-6 md:right-10 flex justify-between items-center">
-                    <div className="relative w-24 h-10 opacity-30 grayscale brightness-0">
-                      <Image src="/logo.svg" alt="BABA" fill className="object-contain" />
-                    </div>
-                    <p className="text-[#212121]/30 text-[13px] font-black uppercase tracking-[0.4em]"> {currentIndex + 1} / {galleryImages.length} </p>
-                  </div>
-                </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; }
+      `}</style>
+    </section>
   );
 }
