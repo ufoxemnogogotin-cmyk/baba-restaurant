@@ -125,7 +125,7 @@ export default function LocationSection() {
             </div>
 
             {/* TEXT SIDE */}
-            <div className="w-full lg:w-[35%] z-20 text-center lg:text-left order-4 lg:order-1 mt-8 lg:mt-0 pt-0 lg:pt-0">
+            <div className="w-full lg:w-[35%] z-20 text-center lg:text-left order-4 lg:order-1 mt-2 lg:mt-0 pt-0 lg:pt-0">
               <h2 className="hidden lg:block text-[#212121] uppercase tracking-[0.8em] text-[10px] font-bold mb-12 opacity-40">
                 Преживяването
               </h2>
