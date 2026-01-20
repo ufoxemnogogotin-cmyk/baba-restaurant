@@ -138,7 +138,8 @@ export default function LocationSection() {
                     </h3>
                     
                     {/* ТУК са приложени стиловете: text-[12px] lg:text-[18px] font-light italic */}
-                    <p className="text-[#212121]/70 text-[12px] lg:text-[18px] font-light italic leading-relaxed max-w-[300px] lg:max-w-md mx-auto lg:mx-0 border-none lg:border-l-2 border-[#722F37]/20 lg:pl-8">
+                    <p className="text-[#212121]/70 text-base lg:text-[18px] font-light italic leading-relaxed max-w-[300px] lg:max-w-md mx-auto lg:mx-0 border-l-0 lg:border-l-2 border-[#722F37]/20 lg:pl-8">
+
                       {loc.desc}
                     </p>
                     
