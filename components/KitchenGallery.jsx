@@ -135,7 +135,7 @@ const KitchenGallery = () => {
             Bernhard Zimmerl serviert ein fein abgestimmtes 23-Gänge-Menü, das seine Handschrift trägt und Gästen ein ebenso präzises wie überraschendes Geschmackserlebnis bietet.
           </p>
           <p className="text-sm opacity-80">
-            Das Menü wurde mit Sorgfalt und Liebe zum Detail kreiert und bleibt in seiner Komposition unverändert. Individuelle Anpassungen bei Allergien oder besonderen Ernährungsweisen sind nicht vorgesehen.
+            "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
           </p>
 
           <div className="pt-4">
