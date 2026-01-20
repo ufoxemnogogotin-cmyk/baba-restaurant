@@ -144,7 +144,7 @@ export default function Footer() {
             >
               <div className="relative w-[180px] h-[80px] lg:w-[300px] lg:h-[150px] transition-opacity duration-700 opacity-25 group-hover:opacity-100">
                 <Image 
-                  src="/logo-1.svg" 
+                  src="/logo.svg" 
                   alt="BABA Logo" 
                   fill 
                   className="object-contain brightness-0 invert" 
