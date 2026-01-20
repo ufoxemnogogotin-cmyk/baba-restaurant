@@ -32,16 +32,17 @@ export default function KitchenGallery() {
   const handleMobileScroll = () => {
     if (mobileSliderRef.current) {
       const scrollLeft = mobileSliderRef.current.scrollLeft;
-      // Изчисляваме индекса на база приблизителната ширина на една карта
+      // Ширината на една карта е 85vw. Изчисляваме коя карта е на фокус.
       const cardWidth = window.innerWidth * 0.85; 
       const newIndex = Math.round(scrollLeft / cardWidth);
       
+      // Ограничаваме индекса да не излиза извън масива
       const clampedIndex = Math.min(Math.max(newIndex, 0), dishes.length - 1);
       setActiveSlide(clampedIndex);
     }
   };
 
-  // --- СТИЛОВЕ ЗА ДЕСКТОП ---
+  // --- СТИЛОВЕ САМО ЗА ДЕСКТОП ---
   const getDesktopStyle = (index) => {
     const animationEnd = 0.85; 
     const step = animationEnd / dishes.length;
@@ -69,12 +70,10 @@ export default function KitchenGallery() {
   return (
     <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] h-auto lg:h-[350vh]">
       
-      {/* ВАЖНО: Премахнахме overflow-hidden от тук за мобилни (стана lg:overflow-hidden).
-         Това позволява на слайдъра да работи свободно.
-      */}
+      {/* Sticky Container */}
       <div className="relative lg:sticky top-0 w-full flex flex-col lg:flex-row items-center justify-center lg:overflow-hidden min-h-[100dvh] lg:h-screen py-12 lg:py-0">
         
-        {/* BACKGROUND TEXT - Desktop Only */}
+        {/* BACKGROUND TEXT (ARTFOOD) - Desktop Only */}
         <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none overflow-hidden z-0">
           <span 
             className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
@@ -84,7 +83,7 @@ export default function KitchenGallery() {
           </span>
         </div>
 
-        {/* MAIN CONTENT */}
+        {/* MAIN CONTENT CONTAINER */}
         <div className="container lg:w-full lg:max-w-1200 mx-auto px-0 md:px-12 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full relative h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between z-10">
           
           {/* MOBILE TITLE */}
@@ -94,27 +93,29 @@ export default function KitchenGallery() {
             </h2>
           </div>
 
+          {/* КОНТЕЙНЕР ЗА СНИМКИТЕ */}
           <div className="w-full flex flex-col items-center order-1 lg:order-2 flex-shrink-0 mb-8 lg:mb-0 lg:w-[55%] lg:relative lg:h-[80vh]">
             
-            {/* === 1. МОБИЛЕН СЛАЙДЪР === */}
-            {/* Използваме custom class 'mobile-slider-container' за видимост */}
-            <div className="mobile-slider-container w-full relative">
+            {/* === 1. МОБИЛЕН СЛАЙДЪР === 
+                Използваме 'block lg:hidden', за да го покажем САМО на мобилни
+            */}
+            <div className="block lg:hidden w-full relative">
               <div 
                 ref={mobileSliderRef}
                 onScroll={handleMobileScroll}
                 className="
                   flex 
-                  flex-nowrap /* Гарантира, че са на един ред */
                   w-full
                   overflow-x-auto 
                   snap-x snap-mandatory 
-                  scrollbar-hide 
+                  no-scrollbar /* Tailwind class ако имате плъгин, иначе inline style долу */
                   px-6 
                   pb-4
                   gap-4
                   items-center
                   touch-pan-x
                 "
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Скрива скролбара
               >
                 {dishes.map((dish) => (
                   <div 
@@ -122,7 +123,7 @@ export default function KitchenGallery() {
                     className="
                       bg-white p-2 pb-8 shadow-[0_10px_30px_rgba(0,0,0,0.1)] 
                       relative 
-                      min-w-[85vw] /* Ширина на картата */
+                      min-w-[85vw] /* Картата заема 85% от ширината на екрана */
                       snap-center 
                       flex-shrink-0
                       rounded-sm
@@ -138,11 +139,12 @@ export default function KitchenGallery() {
                     </div>
                   </div>
                 ))}
-                {/* Spacer */}
+                
+                {/* Spacer за десния край */}
                 <div className="min-w-[4vw] h-full flex-shrink-0 snap-align-none"></div>
               </div>
 
-              {/* ИНДИКАТОРИ */}
+              {/* ИНДИКАТОРИ (ТОЧКИ) */}
               <div className="flex justify-center gap-3 mt-4 w-full">
                 {dishes.map((_, index) => (
                   <div
@@ -156,9 +158,10 @@ export default function KitchenGallery() {
               </div>
             </div>
 
-            {/* === 2. ДЕСКТОП ВЕРСИЯ === */}
-            {/* Използваме custom class 'desktop-stack-container' за видимост */}
-            <div className="desktop-stack-container w-full h-full relative hidden">
+            {/* === 2. ДЕСКТОП СТАК === 
+                Използваме 'hidden lg:block', за да го покажем САМО на десктоп
+            */}
+            <div className="hidden lg:block w-full h-full relative">
                {dishes.map((dish, index) => (
                 <div 
                   key={dish.id}
@@ -201,30 +204,6 @@ export default function KitchenGallery() {
 
         </div>
       </div>
-      
-      {/* CUSTOM CSS ЗА СИГУРНОСТ
-          Това гарантира показването на правилния контейнер,
-          дори ако Tailwind breakpoints не сработват правилно.
-      */}
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* По подразбиране (Мобилно) */
-        .mobile-slider-container { display: block; }
-        .desktop-stack-container { display: none; }
-
-        /* За Десктоп (Над 1024px) */
-        @media (min-width: 1024px) {
-            .mobile-slider-container { display: none; }
-            .desktop-stack-container { display: block; }
-        }
-      `}</style>
     </section>
   );
 }
