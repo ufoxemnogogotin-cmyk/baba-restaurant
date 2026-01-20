@@ -49,19 +49,21 @@ export default function EventsSection() {
           </div>
 
           {/* TEXT SIDE */}
-          <div className="w-full lg:w-[50%] flex flex-col items-start lg:items-start">
-            <h2 className="text-[#212121] uppercase tracking-[0.5em] lg:tracking-[0.8em] text-[10px] font-bold mb-6 lg:mb-8 opacity-40">
+          {/* ПРОМЯНА: items-center за мобилни (центриране), lg:items-start за десктоп (ляво) */}
+          <div className="w-full lg:w-[50%] flex flex-col items-center lg:items-start">
+            
+            <h2 className="text-[#212121] uppercase tracking-[0.5em] lg:tracking-[0.8em] text-[10px] font-bold mb-6 lg:mb-8 opacity-40 text-center lg:text-left">
               Събития
             </h2>
             
-            <h3 className="text-[#212121] text-3xl md:text-4xl lg:text-[3.5vw] font-serif italic leading-[1.2] mb-8 lg:mb-12 uppercase tracking-tight">
+            <h3 className="text-[#212121] text-3xl md:text-4xl lg:text-[3.5vw] font-serif italic leading-[1.2] mb-8 lg:mb-12 uppercase tracking-tight text-center lg:text-left">
               Вашето лично събитие <br className="hidden lg:block" /> 
               <span className="text-[#722F37]">в сърцето на София</span>
             </h3>
             
             <div className="space-y-6 lg:space-y-8 mb-10 lg:mb-16 max-w-lg">
-              {/* ТУК СА ПРИЛОЖЕНИ НОВИТЕ СТИЛОВЕ: text-[12px] lg:text-[18px] font-light */}
-              <p className="text-[#212121]/70 text-[12px] lg:text-[18px] font-light italic leading-relaxed border-l-0 lg:border-l-2 border-[#722F37]/20 lg:pl-8">
+              {/* ПРОМЯНА: Добавено text-center за мобилни и запазено подравняване вляво за десктоп */}
+              <p className="text-[#212121]/70 text-[12px] lg:text-[18px] font-light italic leading-relaxed border-l-0 lg:border-l-2 border-[#722F37]/20 lg:pl-8 text-center lg:text-left">
                 В неделите <span className="text-[#722F37] font-bold mx-1 lg:mx-2 text-[18px] lg:text-[19px] not-italic tracking-wider">BABA</span> <br className="lg:hidden" /> затваря врати за широката публика.
               </p>
             </div>
