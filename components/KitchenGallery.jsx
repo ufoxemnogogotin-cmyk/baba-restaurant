@@ -1,209 +1,153 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
+// Примерни пътища към снимките - увери се, че са в public папката ти
 const dishes = [
-  { id: 1, title: "Модерна Традиция", img: "/dish1.jpg" },
-  { id: 2, title: "Артизански Детайл", img: "/dish2.jpg" },
-  { id: 3, title: "Балканска Душа", img: "/dish3.jpg" },
+  "/dish1.jpg",
+  "/dish2.jpg",
+  "/dish3.jpg",
+  "/dish1.jpg", // Повтаряме за демо ефекта на скролване
 ];
 
-export default function KitchenGallery() {
-  const containerRef = useRef(null);
-  const mobileSliderRef = useRef(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeSlide, setActiveSlide] = useState(0);
+const KitchenGallery = () => {
+  const scrollContainerRef = useRef(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [showCursor, setShowCursor] = useState(false);
+  const [cursorType, setCursorType] = useState('next'); // 'next' или 'prev'
 
-  // --- 1. ЛОГИКА САМО ЗА ДЕСКТОП (СКРОЛ АНИМАЦИЯ) ---
-  // Този код работи само когато десктоп контейнерът е видим
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const progress = Math.min(Math.max(-rect.top / (rect.height - windowHeight), 0), 1);
-      setScrollProgress(progress);
-    };
+  // Следене на движението на мишката за къстъм курсора
+  const handleMouseMove = (e) => {
+    if (!scrollContainerRef.current) return;
+    
+    // Взимаме позицията на контейнера
+    const rect = scrollContainerRef.current.getBoundingClientRect();
+    
+    // Проверяваме дали мишката е вътре в контейнера със снимките
+    const isInside = 
+      e.clientX >= rect.left && 
+      e.clientX <= rect.right && 
+      e.clientY >= rect.top && 
+      e.clientY <= rect.bottom;
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    setShowCursor(isInside);
 
-  // --- 2. ЛОГИКА САМО ЗА МОБИЛЕН СЛАЙДЪР (ИНДИКАТОРИ) ---
-  const handleMobileScroll = () => {
-    if (mobileSliderRef.current) {
-      const scrollLeft = mobileSliderRef.current.scrollLeft;
-      const cardWidth = window.innerWidth * 0.85; 
-      const newIndex = Math.round(scrollLeft / cardWidth);
-      const clampedIndex = Math.min(Math.max(newIndex, 0), dishes.length - 1);
-      setActiveSlide(clampedIndex);
+    if (isInside) {
+      setCursorPos({
+        x: e.clientX,
+        y: e.clientY
+      });
+
+      // Логика: Ако сме в лявата половина на екрана -> стрелка наляво, иначе надясно
+      if (e.clientX < window.innerWidth / 2) {
+        setCursorType('prev');
+      } else {
+        setCursorType('next');
+      }
     }
   };
 
-  // --- 3. СТИЛОВЕ САМО ЗА ДЕСКТОП ---
-  // Това връща position: absolute, което е нужно за десктоп ефекта
-  const getDesktopStyle = (index) => {
-    const animationEnd = 0.85; 
-    const step = animationEnd / dishes.length;
-    const start = index * step;
-    const end = (index + 1) * step;
-
-    let x = index === 0 ? 0 : 150; 
-
-    if (scrollProgress > start && scrollProgress <= end) {
-      const localProg = (scrollProgress - start) / (end - start);
-      x = index === 0 ? 0 : 150 - (localProg * 150);
-    } else if (scrollProgress > end) {
-      x = 0;
+  // Функция за клик върху галерията (само за десктоп чрез къстъм курсора)
+  const handleGalleryClick = () => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = window.innerWidth * 0.6; // Скролваме 60% от екрана
+      if (cursorType === 'next') {
+        scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      } else {
+        scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      }
     }
-
-    return {
-      opacity: index === 0 ? 1 : (scrollProgress > start ? 1 : 0),
-      transform: `translateX(${x}%) rotate(${index * 2}deg)`,
-      zIndex: 10 + index,
-      transition: 'transform 0.1s linear, opacity 0.3s ease-out',
-      position: 'absolute', // ВАЖНО: Запазено за десктоп
-      top: 0,
-      left: 0
-    };
   };
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] h-auto lg:h-[350vh]">
-      
-      {/* Sticky Container */}
-      <div className="relative lg:sticky top-0 w-full flex flex-col lg:flex-row items-center justify-center lg:overflow-hidden min-h-[100dvh] lg:h-screen py-12 lg:py-0">
-        
-        {/* BACKGROUND TEXT (ARTFOOD) - Само за Desktop */}
-        <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none overflow-hidden z-0">
-          <span 
-            className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
-            style={{ transform: `translateX(${(scrollProgress * 40) - 10}%)` }}
-          >
-            Artfood
-          </span>
-        </div>
+    <section 
+      className="relative w-full min-h-screen bg-[#1a2e2a] text-white overflow-hidden py-12 md:py-20"
+      onMouseMove={handleMouseMove}
+    >
+      {/* --- ЗАГЛАВИЕ (23 GÄNGE) --- */}
+      {/* Позиционирано абсолютно, за да застъпва снимките леко или да стои отстрани */}
+      <div className="absolute top-4 left-4 z-20 md:static md:container md:mx-auto md:mb-[-4rem] md:pl-10 pointer-events-none">
+        <h2 className="font-serif text-[#d4a373] flex items-baseline leading-none">
+          <span className="text-[8rem] md:text-[14rem] font-light">23</span>
+          <span className="text-3xl md:text-5xl ml-2 tracking-widest uppercase opacity-80">Gänge</span>
+        </h2>
+      </div>
 
-        {/* MAIN CONTENT CONTAINER */}
-        <div className="container lg:w-full lg:max-w-1200 mx-auto px-0 md:px-12 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full relative h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between z-10">
-          
-          {/* MOBILE TITLE */}
-          <div className="w-full lg:hidden text-center mb-6 flex-shrink-0 z-[50] px-6">
-            <h2 className="text-[#212121]/40 uppercase tracking-[0.5em] text-[10px] font-bold">
-              Culinary Heritage
-            </h2>
-          </div>
-
-          {/* КОНТЕЙНЕР ЗА СНИМКИТЕ (РАЗДЕЛЕН НА ДВЕ) */}
-          <div className="w-full flex flex-col items-center order-1 lg:order-2 flex-shrink-0 mb-8 lg:mb-0 lg:w-[55%] lg:relative lg:h-[80vh]">
-            
-            {/* === ВАРИАНТ 1: МОБИЛЕН СЛАЙДЪР (lg:hidden) === */}
-            {/* Добавено flex-row и flex-nowrap за да се гарантира, че са на един ред */}
-            <div className="block lg:hidden w-full relative">
-              <div 
-                ref={mobileSliderRef}
-                onScroll={handleMobileScroll}
-                className="
-                  flex 
-                  flex-row        /* ГАРАНТИРА ХОРИЗОНТАЛНА ПОДРЕДБА */
-                  flex-nowrap     /* ЗАБРАНЯВА ПРЕНАСЯНЕТО НА НОВ РЕД */
-                  w-full
-                  overflow-x-auto 
-                  snap-x snap-mandatory 
-                  px-6 
-                  pb-4
-                  gap-4
-                  items-center
-                  touch-pan-x
-                "
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                {dishes.map((dish) => (
-                  <div 
-                    key={dish.id}
-                    className="
-                      bg-white p-2 pb-8 shadow-[0_10px_30px_rgba(0,0,0,0.1)] 
-                      relative 
-                      min-w-[85vw]    /* ФИКСИРАНА ШИРИНА ЗА МОБИЛНИ */
-                      snap-center 
-                      flex-shrink-0   /* ЗАБРАНЯВА СМАЧКВАНЕТО */
-                      rounded-sm
-                    "
-                  >
-                    <div className="relative aspect-[3.5/5] overflow-hidden grayscale-[10%]">
-                      <Image src={dish.img} alt={dish.title} fill className="object-cover" />
-                    </div>
-                    <div className="absolute bottom-4 left-0 w-full text-center px-2">
-                      <span className="text-[#212121]/60 font-serif italic text-[14px] tracking-[0.2em] uppercase block truncate">
-                        {dish.title}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-                
-                {/* Spacer */}
-                <div className="min-w-[4vw] h-full flex-shrink-0 snap-align-none"></div>
-              </div>
-
-              {/* ИНДИКАТОРИ */}
-              <div className="flex justify-center gap-3 mt-4 w-full">
-                {dishes.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`
-                      h-1.5 rounded-full transition-all duration-300
-                      ${index === activeSlide ? 'bg-[#722F37] w-8' : 'bg-[#212121]/20 w-1.5'}
-                    `}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* === ВАРИАНТ 2: ДЕСКТОП СТАК (hidden lg:block) === */}
-            {/* Този контейнер е скрит на мобилни и се показва само на Desktop */}
-            <div className="hidden lg:block w-full h-full relative">
-               {dishes.map((dish, index) => (
-                <div 
-                  key={dish.id}
-                  style={getDesktopStyle(index)} // Тук се прилага position: absolute
-                  className="
-                    bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom
-                    w-[400px] p-4 pb-20 
-                  "
-                >
-                  <div className="relative aspect-[3.5/5] overflow-hidden grayscale-[10%]">
-                    <Image src={dish.img} alt={dish.title} fill className="object-cover" priority={index === 0} />
-                  </div>
-                  <div className="absolute bottom-6 left-0 w-full text-center px-2">
-                    <span className="text-[#212121]/60 font-serif italic text-[14px] tracking-[0.2em] uppercase block truncate">
-                      {dish.title}
-                    </span>
-                  </div>
+      {/* --- ГАЛЕРИЯ СНИМКИ --- */}
+      <div className="relative w-full mt-24 md:mt-0 pl-0 md:pl-[30%]">
+        {/* Контейнер за скролване */}
+        <div 
+          ref={scrollContainerRef}
+          onClick={handleGalleryClick}
+          className={`
+            flex overflow-x-auto gap-4 md:gap-10 pb-8 px-4 md:px-0 scrollbar-hide snap-x 
+            ${showCursor ? 'cursor-none' : ''} /* Скриваме стандартния курсор на десктоп */
+          `}
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Скриване на скролбар за Firefox/IE
+        >
+          {dishes.map((img, index) => (
+            <div 
+              key={index} 
+              className="flex-shrink-0 w-[85vw] md:w-[45vw] h-[50vh] md:h-[65vh] relative snap-center"
+            >
+              <img 
+                src={img} 
+                alt={`Dish ${index + 1}`} 
+                className="w-full h-full object-cover rounded-sm shadow-2xl grayscale-[20%] hover:grayscale-0 transition-all duration-700"
+              />
+              
+              {/* МОБИЛЕН БУТОН (Фиксиран върху снимката долу вдясно, само за мобилни) */}
+              <div className="md:hidden absolute bottom-6 right-6 z-10">
+                <div className="w-14 h-14 rounded-full bg-[#d4a373] flex items-center justify-center shadow-lg animate-pulse">
+                   <ArrowRight className="text-[#1a2e2a] w-6 h-6" />
                 </div>
-              ))}
+              </div>
             </div>
+          ))}
+          
+          {/* Допълнително пространство в края за по-добър скрол */}
+          <div className="w-[10vw] flex-shrink-0"></div>
+        </div>
+      </div>
 
+      {/* --- КЪСТЪМ КУРСОР (САМО ЗА DESKTOP) --- */}
+      {/* Рендира се само ако showCursor е true и сме на по-голям екран */}
+      <div 
+        className={`fixed pointer-events-none z-50 hidden md:flex items-center justify-center w-24 h-24 rounded-full bg-[#d4a373] bg-opacity-90 backdrop-blur-sm shadow-2xl transition-transform duration-100 ease-out transform -translate-x-1/2 -translate-y-1/2 mix-blend-normal`}
+        style={{ 
+          left: cursorPos.x, 
+          top: cursorPos.y,
+          opacity: showCursor ? 1 : 0,
+          scale: showCursor ? 1 : 0.5
+        }}
+      >
+        {cursorType === 'next' ? (
+          <ArrowRight className="text-[#1a2e2a] w-8 h-8" />
+        ) : (
+          <ArrowLeft className="text-[#1a2e2a] w-8 h-8" />
+        )}
+      </div>
+
+      {/* --- ТЕКСТОВО ОПИСАНИЕ И БУТОН КЪМ МЕНЮТО --- */}
+      <div className="container mx-auto px-6 mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div className="md:col-start-4 md:col-span-6 text-gray-300 font-light leading-relaxed space-y-6">
+          <p className="text-lg">
+            Bernhard Zimmerl serviert ein fein abgestimmtes 23-Gänge-Menü, das seine Handschrift trägt und Gästen ein ebenso präzises wie überraschendes Geschmackserlebnis bietet.
+          </p>
+          <p className="text-sm opacity-80">
+            Das Menü wurde mit Sorgfalt und Liebe zum Detail kreiert und bleibt in seiner Komposition unverändert. Individuelle Anpassungen bei Allergien oder besonderen Ernährungsweisen sind nicht vorgesehen.
+          </p>
+
+          <div className="pt-4">
+            <Link to="/menupage" className="inline-flex items-center gap-3 px-8 py-3 bg-[#3a4e4a] hover:bg-[#d4a373] hover:text-[#1a2e2a] text-[#d4a373] transition-colors duration-300 rounded-sm uppercase tracking-widest text-xs font-bold border border-[#3a4e4a]">
+              Menü
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
-
-          {/* TEXT SIDE */}
-          <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start order-2 lg:order-1 text-center lg:text-left flex-shrink-0 px-6 lg:px-0">
-            <h2 className="hidden lg:block text-[#212121]/40 uppercase tracking-[0.8em] text-[10px] font-bold mb-16 opacity-40">
-              Culinary Heritage
-            </h2>
-            
-            <h3 className="text-[#212121] text-4xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1] tracking-tighter uppercase mb-6 lg:mb-12">
-              Вкусът <br className="hidden lg:block" /> 
-              на <br className="hidden lg:block" /> 
-              миналото
-            </h3>
-            
-            <p className="text-[#212121]/70 text-[14px] lg:text-[18px] font-light italic leading-relaxed max-w-[300px] lg:max-w-md mx-auto lg:mx-0 border-none lg:border-l-2 border-[#722F37]/20 lg:pl-8">
-              "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
-            </p>
-          </div>
-
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default KitchenGallery;
