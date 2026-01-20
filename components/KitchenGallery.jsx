@@ -52,7 +52,7 @@ export default function KitchenGallery() {
   };
 
   return (
-    // Променен padding: py-10 става pb-[20px] pt-10 за мобилни
+    // Намален bottom padding с 20px (беше py-10, сега е pt-10 pb-[20px])
     <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] pt-10 pb-[20px] lg:py-0">
       
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center lg:overflow-hidden">
@@ -82,17 +82,17 @@ export default function KitchenGallery() {
           {/* IMAGES AREA */}
           <div className="w-full lg:w-[45%] relative">
             
-            {/* MOBILE ONLY - С ОПРАВЕНА СЯНКА И SMOOTH ВИЗИЯ */}
+            {/* MOBILE ONLY */}
             <div className="block lg:hidden w-screen overflow-visible relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
               <div 
                 onScroll={handleMobileScroll}
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-10 overflow-y-visible"
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-8 overflow-y-visible"
               >
                 {dishes.map((dish) => (
                   <div 
                     key={`mob-${dish.id}`} 
-                    // Сменена сянка: по-голям spread, по-малка прозрачност за мекота
-                    className="snap-center shrink-0 w-[80vw] bg-white p-2 pb-10 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.04)]"
+                    // МНОГО МЕКА СЯНКА: rgba прозрачност 0.02 и голям blur
+                    className="snap-center shrink-0 w-[80vw] bg-white p-2 pb-10 shadow-[0_20px_60px_rgba(0,0,0,0.03)]"
                   >
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <Image src={dish.img} alt={dish.title} fill className="object-cover" />
@@ -106,8 +106,8 @@ export default function KitchenGallery() {
                 ))}
               </div>
               
-              {/* Dots */}
-              <div className="flex justify-center gap-3 mt-0">
+              {/* Dots - Свалени надолу с mt-6 */}
+              <div className="flex justify-center gap-3 mt-6">
                 {dishes.map((_, i) => (
                   <div key={i} className={`h-[1px] transition-all duration-500 ${activeIndex === i ? "w-8 bg-[#722F37]" : "w-3 bg-[#212121]/10"}`} />
                 ))}
