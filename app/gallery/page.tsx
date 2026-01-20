@@ -5,8 +5,8 @@ export default function GalleryPage() {
     <main className="bg-[#F5F2ED] min-h-screen pt-32 lg:pt-48 pb-24 px-6 lg:px-24">
       <div className="container mx-auto">
         
-        {/* Заглавие на страницата */}
-        <header className="mb-20 lg:ml-[10%]">
+        {/* Заглавие на страницата - Центрирано на мобилни, вляво на десктоп */}
+        <header className="mb-20 lg:ml-[10%] flex flex-col items-center lg:items-start text-center lg:text-left">
           <p className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold opacity-40 mb-4">
             Визуална история
           </p>
