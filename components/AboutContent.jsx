@@ -12,14 +12,14 @@ export default function AboutContent() {
   const containerRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Прагът, при който сменяме текста със снимките на мобилен (0.15 = 15% скрол)
-  const MOBILE_SWITCH_POINT = 0.15;
-
+  // --- ЛОГИКА ЗА ДЕСКТОП (СКРОЛ АНИМАЦИЯ) ---
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
+      
+      // Тази логика работи коректно, когато контейнерът е висок (на Desktop)
       const progress = Math.min(Math.max(-rect.top / (rect.height - windowHeight), 0), 1);
       setScrollProgress(progress);
     };
@@ -28,7 +28,8 @@ export default function AboutContent() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const getStyle = (index) => {
+  // --- СТИЛОВЕ ЗА ДЕСКТОП АНИМАЦИЯТА ---
+  const getDesktopStyle = (index) => {
     const animationEnd = 0.9; 
     const step = animationEnd / teamPhotos.length;
     const start = index * step;
@@ -46,17 +47,23 @@ export default function AboutContent() {
       opacity: scrollProgress > start ? 1 : 0,
       transform: `translateX(${x}%) rotate(${index * -3 + 2}deg)`,
       zIndex: 10 + index,
-      transition: 'transform 0.1s linear, opacity 0.3s ease-out'
+      transition: 'transform 0.1s linear, opacity 0.3s ease-out',
+      position: 'absolute' // Важно за десктоп стека
     };
   };
 
-  // Изчисляваме дали сме минали точката на смяна за мобилни
-  const isTextHiddenOnMobile = scrollProgress > MOBILE_SWITCH_POINT;
-
   return (
-    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] h-[300vh]">
+    <section 
+      ref={containerRef} 
+      // ПРОМЯНА: h-auto за мобилни (нормален поток), 300vh за десктоп (за скрол ефекта)
+      className="relative z-30 bg-[#F5F2ED] h-auto lg:h-[300vh]"
+    >
       
-      <div className="sticky top-0 h-[100dvh] lg:h-screen w-full flex items-center overflow-hidden">
+      {/* WRAPPER:
+          Mobile: relative block (нормално подреждане)
+          Desktop: sticky top-0 h-screen (заковано за екрана)
+      */}
+      <div className="relative block lg:sticky lg:top-0 lg:h-screen w-full lg:flex lg:items-center lg:overflow-hidden">
         
         {/* ФОНОВ ВОДЕН ЗНАК */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -68,27 +75,29 @@ export default function AboutContent() {
         {/* ОСНОВЕН КОНТЕЙНЕР */}
         <div className="
             container mx-auto px-6 md:px-12 lg:px-24 
+            flex flex-col 
+            lg:grid lg:grid-cols-12 lg:gap-16 lg:justify-center lg:items-center
             relative z-10 w-full h-full 
-            lg:grid lg:grid-cols-12 lg:gap-16 lg:items-center
+            py-16 lg:py-0
         ">
           
-          {/* --- ТЕКСТОВА ЧАСТ --- 
-              Mobile: Absolute позиция, центрирана. Изчезва, когато скролнеш.
-              Desktop: Static позиция (в грида), винаги видима.
+          {/* --- ТЕКСТОВА ЧАСТ --- */}
+          {/* Mobile: Нормален блок най-горе.
+             Desktop: Лява колона.
           */}
-          <div className={`
-              absolute inset-0 flex flex-col justify-center items-center text-center px-6 transition-all duration-700 z-20
-              lg:static lg:block lg:text-left lg:col-span-6 lg:pl-12 lg:opacity-100 lg:transform-none lg:pointer-events-auto
-              ${isTextHiddenOnMobile ? 'opacity-0 -translate-y-10 pointer-events-none' : 'opacity-100'}
-          `}>
-            
-            <div className="space-y-4 md:space-y-6 flex flex-col items-center lg:items-start mb-8 lg:mb-6">
+          <div className="
+              w-full mb-16 lg:mb-0
+              lg:col-span-6 lg:pl-12 text-center lg:text-left z-20 
+          ">
+            {/* Заглавие */}
+            <div className="space-y-4 md:space-y-6 flex flex-col items-center lg:items-start mb-8">
               <h3 className="text-[#212121] font-serif italic uppercase leading-[1.1] tracking-tighter text-3xl md:text-4xl lg:text-6xl">
                 Почитаме традициите <br /> през призмата на <br /> съвремието.
               </h3>
               <div className="h-[1px] w-16 md:w-32 bg-[#722F37]/40"></div>
             </div>
 
+            {/* Параграфи */}
             <div className="
                 max-w-md mx-auto lg:mx-0
                 text-[#212121]/70 font-light leading-relaxed italic 
@@ -101,50 +110,80 @@ export default function AboutContent() {
                 Ние не вярваме в компромисите. Затова всяка съставка в нашето меню е плод на дълго търсене на малки ферми и занаятчии.
               </p>
             </div>
-
-            {/* Индикатор за скролване (само за мобилни, докато текста е видим) */}
-            <div className={`absolute bottom-10 animate-bounce lg:hidden transition-opacity duration-300 ${isTextHiddenOnMobile ? 'opacity-0' : 'opacity-50'}`}>
-                <span className="text-xs uppercase tracking-widest text-[#212121]">Скрол</span>
-            </div>
           </div>
 
-          {/* --- ГАЛЕРИЯ СНИМКИ --- 
-              Mobile: Absolute позиция, центрирана. Появява се, когато скролнеш.
-              Desktop: Static позиция (в грида), винаги видима.
-          */}
-          <div className={`
-              absolute inset-0 flex items-center justify-center transition-all duration-700 z-10
-              lg:static lg:block lg:col-span-6 lg:h-[600px] lg:flex lg:items-center lg:justify-end lg:opacity-100 lg:transform-none
-              ${isTextHiddenOnMobile ? 'opacity-100' : 'opacity-0 translate-y-10'}
-          `}>
-            {teamPhotos.map((photo, index) => (
-              <div 
-                key={photo.id}
-                style={getStyle(index)}
-                className="
-                  absolute bg-white p-2 md:p-3 pb-8 md:pb-20 shadow-[0_15px_40px_-5px_rgba(0,0,0,0.15)] origin-bottom
-                  w-[80vw] sm:w-[320px]
-                  md:max-w-[240px] 
-                  lg:w-full lg:max-w-[420px] 
-                  lg:relative lg:bottom-auto
-                "
-              >
-                <div className="relative aspect-[4/5] overflow-hidden grayscale-[10%]">
-                  <Image 
-                    src={photo.img} 
-                    alt={photo.title} 
-                    fill 
-                    className="object-cover" 
-                  />
-                </div>
-                
-                <div className="absolute bottom-2 md:bottom-6 left-0 w-full text-center">
-                  <span className="text-[#212121]/60 font-serif italic text-xs md:text-base tracking-[0.2em] uppercase">
-                    {photo.title}
-                  </span>
-                </div>
-              </div>
-            ))}
+          {/* --- ГАЛЕРИЯ (ДВА ВАРИАНТА) --- */}
+          <div className="w-full lg:col-span-6 relative flex justify-center lg:justify-end lg:h-[600px] lg:items-center">
+            
+            {/* ВАРИАНТ 1: МОБИЛЕН СЛАЙДЪР (Carousel)
+                Видим само на мобилни (lg:hidden).
+                Снимките се сменят с плъзгане на пръст (swipe).
+            */}
+            <div className="lg:hidden w-full overflow-x-auto snap-x snap-mandatory flex gap-4 pb-8 px-4 no-scrollbar">
+               {teamPhotos.map((photo) => (
+                  <div 
+                    key={photo.id}
+                    className="
+                      relative 
+                      min-w-[85vw] sm:min-w-[350px] 
+                      snap-center 
+                      bg-white p-3 pb-12 
+                      shadow-[0_10px_30px_rgba(0,0,0,0.1)] 
+                      rounded-sm
+                    "
+                  >
+                    <div className="relative aspect-[4/5] overflow-hidden grayscale-[10%]">
+                      <Image 
+                        src={photo.img} 
+                        alt={photo.title} 
+                        fill 
+                        className="object-cover" 
+                      />
+                    </div>
+                    <div className="absolute bottom-4 left-0 w-full text-center">
+                      <span className="text-[#212121]/60 font-serif italic text-sm tracking-[0.2em] uppercase">
+                        {photo.title}
+                      </span>
+                    </div>
+                  </div>
+               ))}
+               {/* Spacer за да има въздух в края */}
+               <div className="min-w-[5vw] snap-align-none"></div>
+            </div>
+
+            {/* ВАРИАНТ 2: ДЕСКТОП СТАК (Скрол анимация)
+                Видим само на десктоп (hidden lg:block).
+                Използва оригиналната логика с getStyle.
+            */}
+            <div className="hidden lg:block w-full h-full relative">
+                {teamPhotos.map((photo, index) => (
+                  <div 
+                    key={photo.id}
+                    style={getDesktopStyle(index)}
+                    className="
+                      absolute bg-white p-3 pb-20 shadow-[0_15px_40px_-5px_rgba(0,0,0,0.15)] origin-bottom
+                      w-full max-w-[420px] 
+                      right-0 top-1/2 -translate-y-1/2
+                    "
+                  >
+                    <div className="relative aspect-[4/5] overflow-hidden grayscale-[10%] hover:grayscale-0 transition-all duration-700">
+                      <Image 
+                        src={photo.img} 
+                        alt={photo.title} 
+                        fill 
+                        className="object-cover" 
+                      />
+                    </div>
+                    
+                    <div className="absolute bottom-6 left-0 w-full text-center">
+                      <span className="text-[#212121]/60 font-serif italic text-base tracking-[0.2em] uppercase">
+                        {photo.title}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
           </div>
         </div>
       </div>
