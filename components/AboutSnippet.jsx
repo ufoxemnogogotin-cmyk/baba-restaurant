@@ -33,7 +33,7 @@ export default function AboutSnippet() {
   };
 
   return (
-    <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-24 lg:pb-64 overflow-hidden">
+    <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-16 lg:pb-64 overflow-hidden">
       
       <div className="container lg:w-full lg:max-w-none mx-auto px-6 lg:px-0 lg:pl-[320px] lg:pr-[235px] relative">
         
@@ -45,7 +45,7 @@ export default function AboutSnippet() {
           <div className="h-[1px] w-24 bg-[#722F37]/30"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center lg:items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center lg:items-start">
           
           {/* TEXT */}
           <div className="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -82,8 +82,10 @@ export default function AboutSnippet() {
           </div>
 
           {/* IMAGE + YEAR + BUTTON */}
-          <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center h-full pt-6 lg:pt-32 w-full">
-            <div className="relative w-full aspect-square max-w-[240px] lg:max-w-[280px] mb-8 lg:mb-12">
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center h-full pt-2 lg:pt-32 w-full">
+            
+            {/* 2025 + LOGO (качени нагоре за телефон) */}
+            <div className="relative w-full aspect-square max-w-[220px] lg:max-w-[280px] mb-6 lg:mb-12">
                <div 
                  className="absolute inset-0 rotate-12 scale-150 opacity-10"
                  style={{ 
@@ -99,20 +101,20 @@ export default function AboutSnippet() {
                  }}
                />
                
-               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-[#722F37] text-7xl lg:text-[7vw] font-serif italic leading-none">
+               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none -translate-y-4 lg:translate-y-0">
+                  <span className="text-[#722F37] text-6xl lg:text-[7vw] font-serif italic leading-none">
                     2025
                   </span>
-                  <span className="text-[#212121] text-[10px] uppercase tracking-[0.5em] font-bold opacity-40 mt-3">
+                  <span className="text-[#212121] text-[10px] uppercase tracking-[0.5em] font-bold opacity-40 mt-2">
                     Est.
                   </span>
                </div>
             </div>
             
-            {/* BUTTON – same size as other CTAs (mobile) */}
+            {/* BUTTON – качен нагоре за телефон */}
             <Link 
               href="/about" 
-              className="group relative px-6 py-3 md:px-8 md:py-4 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none"
+              className="group relative px-6 py-3 md:px-8 md:py-4 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none -translate-y-2 lg:translate-y-0"
             >
                <span className="relative z-10 text-[#212121] text-[10px] font-bold uppercase tracking-[0.5em] transition-colors duration-500 group-hover:text-white">
                  Вижте историята
