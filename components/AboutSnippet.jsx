@@ -37,8 +37,9 @@ export default function AboutSnippet() {
     <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-16 lg:pb-64 overflow-hidden">
       <div className="container lg:w-full lg:max-w-none mx-auto px-6 lg:px-0 lg:pl-[320px] lg:pr-[235px] relative">
         {/* HEADER */}
-        <div className="mb-12 lg:mb-6 flex flex-col items-center lg:items-start mt-6 lg:mt-0">
-          <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold mb-0 opacity-40">
+   <div className="mb-12 lg:mb-20 flex flex-col items-center lg:items-start mt-0">
+  <h2 className="text-[#212121] uppercase tracking-[0.5em] lg:tracking-[0.8em] text-[10px] font-bold mb-6 lg:mb-8 opacity-40 text-center lg:text-left">
+
             ЗА НАС
           </h2>
         </div>
