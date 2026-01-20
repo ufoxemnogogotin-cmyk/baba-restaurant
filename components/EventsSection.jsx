@@ -69,7 +69,7 @@ export default function EventsSection() {
             <button className="group relative w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none mt-4 md:mt-8">
 
               <span className="relative z-10 text-[#212121] text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.4em] lg:tracking-[0.5em] transition-colors duration-500 group-hover:text-white leading-tight">
-                Запитване за частен прием
+                НАПРАВИ ЗАПИТВАНЕ
               </span>
               <div className="absolute top-0 left-0 w-full h-full bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0"></div>
             </button>
