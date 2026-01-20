@@ -13,16 +13,28 @@ export default function Hero() {
              left: '50%', 
              marginLeft: '-50vw',
            }}>
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-        
+{/* DESKTOP VIDEO */}
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="hidden md:block w-full h-full object-cover"
+>
+  <source src="/hero-video.mp4" type="video/mp4" />
+</video>
+
+{/* MOBILE VIDEO */}
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="block md:hidden w-full h-full object-cover"
+>
+  <source src="/hero-video-mobile.mp4" type="video/mp4" />
+</video>
+
         {/* Черен тинт (20%) */}
         <div className="absolute inset-0 bg-black/20 z-10"></div>
       </div>
