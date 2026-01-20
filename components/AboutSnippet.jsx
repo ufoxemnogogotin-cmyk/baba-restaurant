@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -45,14 +46,12 @@ export default function AboutSnippet() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center lg:items-start">
           {/* TEXT */}
           <div className="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
-
             <motion.h3
               variants={titleContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
-             className="text-[#212121] text-3xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 w-full"
-
+              className="text-[#212121] text-5xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 w-full"
             >
               <div className="pr-0 lg:pr-10">
                 {"Където миналото".split(" ").map((word, i) => (
@@ -78,7 +77,6 @@ export default function AboutSnippet() {
 
             <div className="max-w-xl mx-auto lg:mx-0 lg:ml-[12%]">
               <p className="text-[#212121]/70 text-lg leading-relaxed italic text-left max-w-[320px] mx-auto">
-
                 BABA не е просто дестинация, а преживяване, вдъхновено от
                 аристократизма на 19-ти век и смелостта на съвременното изкуство.
               </p>
@@ -122,7 +120,7 @@ export default function AboutSnippet() {
               <span className="relative z-10 text-[#212121] text-[10px] font-bold uppercase tracking-[0.5em] transition-colors duration-500 group-hover:text-white">
                 Вижте историята
               </span>
-              <div className="absolute -inset-[1px] bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0 scale-105"></div>
+              <div className="absolute -inset-[1px] bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0 scale-105" />
             </Link>
           </div>
         </div>
