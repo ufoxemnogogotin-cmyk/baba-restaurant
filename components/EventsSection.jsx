@@ -63,13 +63,14 @@ export default function EventsSection() {
             
             <div className="space-y-6 lg:space-y-8 mb-10 lg:mb-16 max-w-lg">
               {/* ПРОМЯНА: Добавено text-center за мобилни и запазено подравняване вляво за десктоп */}
-              <p className="text-[#212121]/70 text-[12px] lg:text-[18px] font-light italic leading-relaxed border-l-0 lg:border-l-2 border-[#722F37]/20 lg:pl-8 text-center lg:text-left">
+             <p className="text-[#212121]/70 text-base lg:text-[18px] font-light italic leading-relaxed border-l-0 lg:border-l-2 border-[#722F37]/20 lg:pl-8 text-center lg:text-left">
+
                 В неделите <span className="text-[#722F37] font-bold mx-1 lg:mx-2 text-[18px] lg:text-[19px] not-italic tracking-wider">BABA</span> <br className="lg:hidden" /> затваря врати за широката публика.
               </p>
             </div>
 
             {/* БУТОН */}
-            <button className="group relative w-full sm:w-auto px-8 lg:px-16 py-5 lg:py-6 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none">
+            <button className="group relative w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none mt-4 md:mt-8">
               <span className="relative z-10 text-[#212121] text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.3em] lg:tracking-[0.5em] transition-colors duration-500 group-hover:text-white leading-tight">
                 Запитване за частен прием
               </span>
