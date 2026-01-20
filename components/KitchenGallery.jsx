@@ -52,7 +52,8 @@ export default function KitchenGallery() {
   };
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] py-10 lg:py-0">
+    // Променен padding: py-10 става pb-[20px] pt-10 за мобилни
+    <section ref={containerRef} className="relative z-30 bg-[#F5F2ED] lg:h-[350vh] h-auto min-h-[100dvh] pt-10 pb-[20px] lg:py-0">
       
       <div className="relative lg:sticky top-0 h-full lg:h-screen w-full flex flex-col lg:flex-row items-center justify-center lg:overflow-hidden">
         
@@ -81,16 +82,17 @@ export default function KitchenGallery() {
           {/* IMAGES AREA */}
           <div className="w-full lg:w-[45%] relative">
             
-            {/* MOBILE ONLY - EDGE TO EDGE WITHOUT HARSH BOX */}
+            {/* MOBILE ONLY - С ОПРАВЕНА СЯНКА И SMOOTH ВИЗИЯ */}
             <div className="block lg:hidden w-screen overflow-visible relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
               <div 
                 onScroll={handleMobileScroll}
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-12 overflow-y-visible"
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-10 overflow-y-visible"
               >
                 {dishes.map((dish) => (
                   <div 
                     key={`mob-${dish.id}`} 
-                    className="snap-center shrink-0 w-[80vw] bg-white p-2 pb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)]"
+                    // Сменена сянка: по-голям spread, по-малка прозрачност за мекота
+                    className="snap-center shrink-0 w-[80vw] bg-white p-2 pb-10 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.04)]"
                   >
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <Image src={dish.img} alt={dish.title} fill className="object-cover" />
@@ -112,7 +114,7 @@ export default function KitchenGallery() {
               </div>
             </div>
 
-            {/* DESKTOP ONLY - ORIGINAL */}
+            {/* DESKTOP ONLY */}
             <div className="hidden lg:flex relative h-[80vh] w-full items-center justify-end">
               {dishes.map((dish, index) => (
                 <div key={`dt-${dish.id}`} style={getDesktopStyle(index)} className="absolute lg:w-[400px] bg-white lg:p-4 lg:pb-20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom">
