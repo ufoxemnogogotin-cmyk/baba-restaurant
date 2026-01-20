@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-// Подредба: Виртуалната разходка заменя Специалитети (id 2) в грида
 const galleryImages = [
   { id: 1, src: "/loc1.jpg", alt: "Екстериор BABA", span: "md:col-span-2 md:row-span-2", title: "Панорамна Тераса" },
   { id: 3, src: "/loc2.jpg", alt: "Интериор BABA", span: "md:col-span-1 md:row-span-1", title: "Интериор" },
@@ -16,7 +15,6 @@ export default function GalleryGrid() {
   const [selectedImg, setSelectedImg] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Забрана на скрола при отворен модал
   useEffect(() => {
     if (selectedImg) {
       document.body.style.overflow = "hidden";
@@ -56,8 +54,6 @@ export default function GalleryGrid() {
   return (
     <div className="relative">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[250px] lg:auto-rows-[300px] relative z-10">
-        
-        {/* ПЪРВА СНИМКА (ПАНОРАМА) */}
         {galleryImages.slice(0, 1).map((img) => (
           <motion.div
             key={img.id}
@@ -76,7 +72,6 @@ export default function GalleryGrid() {
           </motion.div>
         ))}
 
-        {/* ВИРТУАЛНА РАЗХОДКА (НА МЯСТОТО НА СПЕЦИАЛИТЕТИ) */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -97,7 +92,6 @@ export default function GalleryGrid() {
           <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#722F37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20" />
         </motion.div>
 
-        {/* ОСТАНАЛИТЕ СНИМКИ ОТ ГАЛЕРИЯТА */}
         {galleryImages.slice(1).map((img, index) => (
           <motion.div
             key={img.id}
@@ -116,7 +110,6 @@ export default function GalleryGrid() {
           </motion.div>
         ))}
 
-        {/* МАКСИМАЛНО УВЕЛИЧЕНО И СИВО ЛОГО */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -130,7 +123,6 @@ export default function GalleryGrid() {
         </motion.div>
       </div>
 
-      {/* МОДАЛ / LIGHTBOX */}
       <AnimatePresence>
         {selectedImg && (
           <motion.div
@@ -140,15 +132,15 @@ export default function GalleryGrid() {
             onClick={() => setSelectedImg(null)}
             className="fixed inset-0 z-[1000] bg-[#212121]/98 backdrop-blur-md flex items-center justify-center p-4 md:p-8 cursor-zoom-out"
           >
-            <button onClick={() => setSelectedImg(null)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-all z-[1100] p-4 outline-none">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-
-            <div className="relative flex items-center justify-center w-full max-w-5xl h-full">
-                <button onClick={prevImg} className="absolute left-0 md:-left-24 text-white/70 hover:text-white transition-all z-[1050] p-4 text-6xl font-light outline-none"> ← </button>
-                <button onClick={nextImg} className="absolute right-0 md:-right-24 text-white/70 hover:text-white transition-all z-[1050] p-4 text-6xl font-light outline-none"> → </button>
+            <div className="relative flex flex-col items-center justify-center w-full max-w-5xl h-full">
+                
+                {/* СТРЕЛКИ - В КРЪГЧЕТА */}
+                <button onClick={prevImg} className="absolute left-2 md:-left-24 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all z-[1050] outline-none">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button onClick={nextImg} className="absolute right-2 md:-right-24 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all z-[1050] outline-none">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
 
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
@@ -157,17 +149,30 @@ export default function GalleryGrid() {
                   className="bg-white p-4 pb-16 md:p-6 md:pb-24 shadow-2xl relative w-full max-w-lg lg:max-w-xl cursor-default mx-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
+                  {/* БУТОН ЗА ЗАТВАРЯНЕ - ПОД СНИМКАТА ВДЯСНО ЗА ТЕЛЕФОН */}
+                  <button onClick={() => setSelectedImg(null)} className="absolute -bottom-14 right-0 md:top-0 md:-right-16 text-white/60 hover:text-white transition-all p-2 flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-widest md:hidden">Затвори</span>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+
                   <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F5F2ED]">
                     <Image src={selectedImg.src} alt={selectedImg.alt} fill className="object-cover" priority />
                   </div>
+                  
                   <div className="mt-6 text-center px-4">
                     <p className="text-[#212121] font-serif italic text-2xl md:text-3xl leading-none">{selectedImg.title}</p>
                   </div>
-                  <div className="absolute bottom-4 md:bottom-8 left-6 md:left-10 right-6 md:right-10 flex justify-between items-center">
-                    <div className="relative w-24 h-10 opacity-30 grayscale brightness-0">
+
+                  <div className="absolute bottom-4 md:bottom-8 left-6 md:left-10 right-6 md:right-10 flex justify-start md:justify-between items-center">
+                    {/* ЛОГО - ВЛЯВО ЗА ТЕЛЕФОН */}
+                    <div className="relative w-20 h-8 md:w-24 md:h-10 opacity-30 grayscale brightness-0">
                       <Image src="/logo.svg" alt="BABA" fill className="object-contain" />
                     </div>
-                    <p className="text-[#212121]/30 text-[13px] font-black uppercase tracking-[0.4em]"> {currentIndex + 1} / {galleryImages.length} </p>
+                    <p className="ml-auto md:ml-0 text-[#212121]/30 text-[11px] md:text-[13px] font-black uppercase tracking-[0.4em]"> 
+                      {currentIndex + 1} / {galleryImages.length} 
+                    </p>
                   </div>
                 </motion.div>
             </div>
