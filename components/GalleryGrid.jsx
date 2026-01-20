@@ -93,9 +93,7 @@ export default function GalleryGrid() {
             </button>
 
             <div className="relative flex items-center justify-center w-full max-w-lg">
-              {/* DESKTOP ARROWS */}
-              <button onClick={prevImg} className="hidden md:block absolute -left-24 text-white/70 text-6xl font-light">←</button>
-              <button onClick={nextImg} className="hidden md:block absolute -right-24 text-white/70 text-6xl font-light">→</button>
+              {/* СТРЕЛКИТЕ ЗА ДЕКСТОП СА ПРЕМАХНАТИ (hidden) */}
 
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -114,8 +112,8 @@ export default function GalleryGrid() {
 
                 {/* КОНТЕЙНЕР ПОД РАМКАТА ЗА МОБИЛНИ */}
                 <div className="absolute -bottom-16 left-0 right-0 flex justify-between items-center px-2 md:px-10 md:bottom-8">
-                  {/* ЛОГО - МАКСИМАЛНО ВЛЯВО */}
-                  <div className="relative w-20 h-8 opacity-40 grayscale brightness-0">
+                  {/* ЛОГО - БЯЛО ЗА МОБИЛНИ (invert + brightness) */}
+                  <div className="relative w-20 h-8 invert brightness-0">
                     <Image src="/logo.svg" alt="BABA" fill className="object-contain object-left" />
                   </div>
 
@@ -142,7 +140,7 @@ export default function GalleryGrid() {
 
                 {/* БРОЯЧ - ЦЕНТРИРАН ПОД ТЕКСТА ЗА МОБИЛНИ */}
                 <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 md:translate-x-0 md:static">
-                   <p className="text-white/40 md:text-[#212121]/30 text-[11px] font-black uppercase tracking-[0.4em]">
+                   <p className="text-white/60 md:text-[#212121]/30 text-[11px] font-black uppercase tracking-[0.4em]">
                     {currentIndex + 1} / {galleryImages.length}
                   </p>
                 </div>
