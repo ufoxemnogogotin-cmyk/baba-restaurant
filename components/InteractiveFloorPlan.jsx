@@ -61,56 +61,65 @@ export default function InteractiveFloorPlan() {
   };
 
   return (
-    // ПРОМЕНИТЕ СА ТУК:
-    // 1. mt-0 за мобилни, lg:mt-[-35vh] за десктоп (премахва застъпването на телефон)
-    // 2. px-6 за мобилни (беше 12, което е твърде много)
-    // 3. py-12 за мобилни (добавя въздух), lg:py-0 за десктоп
+    // Оправени отстояния: px-6 за мобилно, py-12 за въздух
     <section className="bg-[#F5F2ED] min-h-[60vh] flex items-start px-6 lg:px-24 mt-0 lg:mt-[-35vh] py-12 lg:py-0 relative z-20"> 
       <div className="container mx-auto lg:ml-[10%]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           
-          {/* ЛЯВА СТРАНА: КОНТЕНТ */}
-          <div className="lg:col-span-4 space-y-10 pt-2 order-2 lg:order-1">
-            <nav className="flex flex-col gap-4" aria-label="Избор на зона за резервация">
+          {/* ЛЯВА СТРАНА: КОНТЕНТ (Текст и бутони) */}
+          {/* ПРОМЕНИ: text-center (мобилно), items-center (мобилно), order-2 (текста под снимката на мобилно) */}
+          <div className="lg:col-span-4 space-y-10 pt-2 order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+            
+            <nav className="flex flex-col gap-4 w-full" aria-label="Избор на зона за резервация">
               {zones.map((zone) => (
                 <button
                   key={zone.id}
                   onMouseEnter={() => { setActiveZone(zone); setImgIndex(0); }}
                   onFocus={() => { setActiveZone(zone); setImgIndex(0); }}
                   onKeyDown={(e) => handleKeyDown(e, zone)}
-                  className={`group text-left border-l-2 pl-8 py-5 transition-all duration-500 outline-none focus:ring-1 focus:ring-[#722F37]/20 ${
-                    activeZone.id === zone.id ? "border-[#722F37] bg-[#212121]/5" : "border-[#212121]/10 opacity-30"
-                  }`}
+                  // ПРОМЕНИ В БУТОНА: 
+                  // text-center lg:text-left -> Центриран текст на мобилно
+                  // border-l-0 lg:border-l-2 -> Махаме чертата отляво на мобилно
+                  // pl-0 lg:pl-8 -> Махаме левия падинг на мобилно
+                  className={`group py-5 transition-all duration-500 outline-none focus:ring-1 focus:ring-[#722F37]/20
+                    text-center lg:text-left 
+                    border-l-0 lg:border-l-2 
+                    pl-0 lg:pl-8 
+                    ${activeZone.id === zone.id ? "border-[#722F37] bg-[#212121]/5" : "border-[#212121]/10 opacity-30"}
+                  `}
                   aria-pressed={activeZone.id === zone.id}
                 >
                   <h3 className="text-2xl font-serif italic uppercase text-[#212121] mb-1 tracking-tighter leading-none">
                     {zone.title}
                   </h3>
-                  <p className="text-[13px] text-[#212121]/60 italic max-w-xs leading-relaxed mt-2">
+                  {/* mx-auto центрира параграфа, когато е на мобилно */}
+                  <p className="text-[13px] text-[#212121]/60 italic max-w-xs leading-relaxed mt-2 mx-auto lg:mx-0">
                     {zone.desc}
                   </p>
                 </button>
               ))}
             </nav>
 
-            <div className="pt-4">
+            {/* КОНТЕЙНЕР НА БУТОНА ЗА РЕЗЕРВАЦИЯ */}
+            {/* justify-center за мобилно */}
+            <div className="pt-4 w-full flex justify-center lg:justify-start">
               <a 
                 href={activeZone.link} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 title={`Резервирайте място в ${activeZone.title}`}
-                className="inline-block outline-none focus:ring-2 focus:ring-[#722F37] focus:ring-offset-4 w-full lg:w-auto"
+                className="inline-block outline-none focus:ring-2 focus:ring-[#722F37] focus:ring-offset-4"
               >
-                <button className="bg-[#722F37] text-white w-full lg:w-auto px-8 lg:px-14 py-5 rounded-none uppercase font-bold tracking-[0.2em] text-[11px] hover:bg-[#212121] transition-all duration-500 shadow-xl pointer-events-none">
+                <button className="bg-[#722F37] text-white px-14 py-5 rounded-none uppercase font-bold tracking-[0.2em] text-[11px] hover:bg-[#212121] transition-all duration-500 shadow-xl pointer-events-none">
                   Продължи с {activeZone.title}
                 </button>
               </a>
             </div>
           </div>
 
-          {/* ДЯСНА СТРАНА: ГАЛЕРИЯ */}
-          {/* order-1 lg:order-2 гарантира, че на мобилен снимката е първа (по желание, можеш да махнеш order класовете ако искаш текста първи) */}
-          <div className="lg:col-span-8 relative order-1 lg:order-2">
+          {/* ДЯСНА СТРАНА: ГАЛЕРИЯ (Снимки) */}
+          {/* order-1: Снимката е първа на мобилно */}
+          <div className="lg:col-span-8 relative order-1 lg:order-2 w-full">
             <div 
               ref={galleryRef}
               role="button"
@@ -132,7 +141,7 @@ export default function InteractiveFloorPlan() {
                 key={`${activeZone.id}-${imgIndex}`}
               />
 
-              {/* ИНТЕРАКТИВЕН КУРСОР - скрит на тъч устройства за по-добър UX */}
+              {/* ИНТЕРАКТИВЕН КУРСОР - скрит на тъч (мобилни) */}
               <div 
                 className={`pointer-events-none absolute z-50 hidden lg:flex items-center justify-center w-16 h-16 rounded-full border border-white/40 bg-black/10 backdrop-blur-md text-white text-xl transition-opacity duration-300 ${
                   mousePos.isVisible ? 'opacity-100' : 'opacity-0'
