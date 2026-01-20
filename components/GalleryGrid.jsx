@@ -73,7 +73,7 @@ export default function GalleryGrid() {
             onClick={() => setSelectedImg(null)}
             className="fixed inset-0 z-[1000] bg-[#212121]/98 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out"
           >
-            {/* БУТОН ЗАТВОРИ - ВИНАГИ ГОРЕ ВДЯСНО */}
+            {/* БУТОН ЗАТВОРИ */}
             <button 
               onClick={() => setSelectedImg(null)} 
               className="absolute top-6 right-6 md:top-10 md:right-10 text-white/60 hover:text-white transition-all z-[1100] flex items-center gap-2 outline-none p-2"
@@ -109,7 +109,7 @@ export default function GalleryGrid() {
                     </p>
                   </div>
 
-                  {/* СТРЕЛКИ (КРЪГЧЕТА) - ДОЛУ ЗА МОБИЛЕН */}
+                  {/* СТРЕЛКИ МОБИЛЕН */}
                   <div className="absolute -bottom-16 left-0 w-full flex justify-center gap-6 md:hidden">
                     <button onClick={prevImg} className="bg-white/10 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full flex items-center justify-center active:scale-90 transition-all">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -120,7 +120,7 @@ export default function GalleryGrid() {
                   </div>
                 </motion.div>
 
-                {/* ДЕСКТОП СТРЕЛКИ */}
+                {/* СТРЕЛКИ ДЕСКТОП */}
                 <button onClick={prevImg} className="hidden md:flex absolute -left-24 bg-white/5 hover:bg-white/10 text-white w-16 h-16 rounded-full items-center justify-center transition-all">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 18l-6-6 6-6"/></svg>
                 </button>
