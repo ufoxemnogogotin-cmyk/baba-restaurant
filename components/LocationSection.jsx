@@ -124,13 +124,13 @@ export default function LocationSection() {
               ))}
             </div>
 
-            {/* TEXT SIDE - ДОБАВЕН MT-4 ЗА МОБИЛНИ (+15px разстояние) */}
-            <div className="w-full lg:w-[35%] z-20 text-center lg:text-left order-4 lg:order-1 mt-4 lg:mt-0 pt-0 lg:pt-0">
+            {/* TEXT SIDE - ДОБАВЕН MT-8 ЗА МОБИЛНИ (ОКОЛО +30px ОБЩО) */}
+            <div className="w-full lg:w-[35%] z-20 text-center lg:text-left order-4 lg:order-1 mt-8 lg:mt-0 pt-0 lg:pt-0">
               <h2 className="hidden lg:block text-[#212121] uppercase tracking-[0.8em] text-[10px] font-bold mb-12 opacity-40">
                 Преживяването
               </h2>
               
-              <div className="relative h-[220px] md:h-[250px] lg:h-[350px]">
+              <div className="relative h-[230px] md:h-[250px] lg:h-[350px]">
                 {locations.map((loc, i) => (
                   <div key={i} className={`absolute top-0 left-0 w-full transition-all duration-700 ${activeIndex === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
                     <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] tracking-tighter mb-2 md:mb-6 uppercase">
