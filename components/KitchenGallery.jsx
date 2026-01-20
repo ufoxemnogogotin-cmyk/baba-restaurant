@@ -74,7 +74,7 @@ export default function KitchenGallery() {
       transform: `translateX(${x}%) rotate(${index * 2}deg)`,
       zIndex: 10 + index,
       transition: 'transform 0.1s linear, opacity 0.3s ease-out',
-      position: 'absolute' // Explicitly set absolute only for desktop via JS
+      // ПРЕМАХНАТО position: absolute от тук - разчитаме на CSS класовете
     };
   };
 
@@ -104,9 +104,7 @@ export default function KitchenGallery() {
             </h2>
           </div>
 
-          {/* IMAGES CONTAINER 
-             Mobile: Flex row, Overflow auto (scroll), Snap
-          */}
+          {/* IMAGES CONTAINER */}
           <div className="w-full flex flex-col items-center order-1 lg:order-2 flex-shrink-0 mb-8 lg:mb-0 lg:relative lg:h-[80vh] lg:w-[55%] lg:block">
             
             {/* СЛАЙДЪР */}
@@ -121,6 +119,7 @@ export default function KitchenGallery() {
                 px-6 lg:px-0 
                 gap-4 lg:gap-0
                 items-center
+                touch-pan-x
               "
             >
               {dishes.map((dish, index) => (
@@ -129,7 +128,8 @@ export default function KitchenGallery() {
                   style={getStyle(index)}
                   className={`
                     bg-white p-2 pb-8 shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom
-                    lg:w-[400px] lg:p-4 lg:pb-20 
+                    /* Desktop Styles: */
+                    lg:absolute lg:w-[400px] lg:p-4 lg:pb-20 
                     /* Mobile Styles: */
                     relative min-w-[85vw] sm:min-w-[350px] snap-center flex-shrink-0
                   `}
@@ -149,7 +149,8 @@ export default function KitchenGallery() {
             </div>
 
             {/* ИНДИКАТОРИ (DOTS) - Само за мобилни */}
-            <div className="flex gap-3 mt-6 lg:hidden">
+            {/* Добавен justify-center, за да са в средата */}
+            <div className="flex justify-center gap-3 mt-6 lg:hidden w-full">
               {dishes.map((_, index) => (
                 <div 
                   key={index}
