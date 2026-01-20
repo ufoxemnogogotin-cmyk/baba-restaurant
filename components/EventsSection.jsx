@@ -10,7 +10,6 @@ export default function EventsSection() {
     const handleScroll = () => {
       if (!sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
-      // Следим скрола само ако секцията е близо до вюпорта
       if (rect.top < window.innerHeight && rect.bottom > -500) {
         setOffsetY(rect.top);
       }
@@ -22,7 +21,7 @@ export default function EventsSection() {
   return (
     <section ref={sectionRef} className="relative z-50 bg-[#F5F2ED] py-24 lg:py-48 overflow-hidden">
       
-      {/* ПАРАЛАКС ТЕКСТ - Скрит на мобилни (hidden), за да не пречи на четимостта */}
+      {/* ПАРАЛАКС ТЕКСТ */}
       <div 
         className="hidden lg:block absolute left-[15px] bottom-[-5%] text-[15vw] font-serif italic text-[#636B2F]/[0.05] pointer-events-none select-none z-10 transition-transform duration-75 ease-out"
         style={{ 
@@ -35,7 +34,7 @@ export default function EventsSection() {
       <div className="container mx-auto px-6 lg:px-24">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-32 lg:ml-[12%] relative z-20 text-center lg:text-left">
           
-          {/* MEDIA SIDE - Видима само на десктоп */}
+          {/* MEDIA SIDE - Десктоп */}
           <div className="hidden lg:block lg:w-[42%] relative h-[70vh] group">
             <div className="absolute -inset-4 border border-[#212121]/5 scale-95 transition-transform duration-1000 group-hover:scale-100"></div>
             <div className="relative w-full h-full overflow-hidden shadow-sm">
@@ -65,9 +64,9 @@ export default function EventsSection() {
               </p>
             </div>
 
-            {/* БУТОН */}
-            <button className="group relative w-full sm:w-auto px-8 lg:px-16 py-5 lg:py-6 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none">
-              <span className="relative z-10 text-[#212121] text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.3em] lg:tracking-[0.5em] transition-colors duration-500 group-hover:text-white leading-tight">
+            {/* БУТОН - ОПРАВЕН С ПАДИНГ КАТО НА СНИМКАТА */}
+            <button className="group relative w-full sm:w-auto px-10 py-7 md:px-16 md:py-8 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none">
+              <span className="relative z-10 text-[#212121] text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.4em] lg:tracking-[0.5em] transition-colors duration-500 group-hover:text-white leading-tight">
                 Запитване за частен прием
               </span>
               <div className="absolute top-0 left-0 w-full h-full bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0"></div>
