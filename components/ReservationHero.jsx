@@ -6,7 +6,7 @@ export default function ReservationHero() {
     <section className="bg-[#F5F2ED] pt-32 lg:pt-24 pb-12 px-6 lg:px-24">
       
       {/* ПРОМЯНА: lg:pl-40 отмества целия текст надясно, за да съвпадне с композицията */}
-      <div className="container mx-auto flex flex-col items-center lg:items-start lg:pl-40">
+      <div className="container mx-auto flex flex-col items-center lg:items-start lg:pl-25">
         
         {/* ЗАГЛАВИЕ 1 */}
         <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold mb-8 opacity-40 text-center lg:text-left">
