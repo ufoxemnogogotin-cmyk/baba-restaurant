@@ -1,5 +1,5 @@
 import Hero from "../components/Hero";
-import KitchenGallery from "../components/KitchenGallery.jsx";
+import KitchenGallery from "../components/KitchenGallery";
 import LocationSection from "../components/LocationSection";
 import EventsSection from "../components/EventsSection";
 import AboutSnippet from "../components/AboutSnippet"; // Добавен импорт за новата секция
