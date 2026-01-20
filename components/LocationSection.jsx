@@ -116,7 +116,7 @@ export default function LocationSection() {
             </div>
 
             {/* МОБИЛНИ ИНДИКАТОРИ */}
-            <div className="flex lg:hidden gap-3 mt-4 z-50 order-3">
+            <div className="flex lg:hidden gap-3 mt-2 z-50 order-3">
               {locations.map((_, i) => (
                 <button key={i} onClick={() => scrollToIndex(i)} className="outline-none">
                   <div className={`transition-all duration-700 h-[2px] shrink-0 ${activeIndex === i ? 'w-8 bg-[#722F37]' : 'w-3 bg-[#212121]/20'}`}></div>
@@ -124,17 +124,16 @@ export default function LocationSection() {
               ))}
             </div>
 
-            {/* TEXT SIDE - ДОБАВЕН MT-12 И PT-6 ЗА ПОВЕЧЕ ВЪЗДУХ ПОД СНИМКАТА НА ТЕЛЕФОН */}
-            <div className="w-full lg:w-[35%] z-20 text-center lg:text-left order-4 lg:order-1 mt-12 lg:mt-0 pt-6 lg:pt-0">
+            {/* TEXT SIDE - ДОБАВЕН MT-4 ЗА МОБИЛНИ (+15px разстояние) */}
+            <div className="w-full lg:w-[35%] z-20 text-center lg:text-left order-4 lg:order-1 mt-4 lg:mt-0 pt-0 lg:pt-0">
               <h2 className="hidden lg:block text-[#212121] uppercase tracking-[0.8em] text-[10px] font-bold mb-12 opacity-40">
                 Преживяването
               </h2>
               
-              {/* УВЕЛИЧЕНА ВИСОЧИНА H-[280PX] ЗА МОБИЛНИ, ЗА ДА НЕ СЕ НАБИВА В ДОЛНИТЕ ЕЛЕМЕНТИ */}
-              <div className="relative h-[280px] md:h-[250px] lg:h-[350px]">
+              <div className="relative h-[220px] md:h-[250px] lg:h-[350px]">
                 {locations.map((loc, i) => (
                   <div key={i} className={`absolute top-0 left-0 w-full transition-all duration-700 ${activeIndex === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
-                    <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] tracking-tighter mb-4 md:mb-6 uppercase">
+                    <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] tracking-tighter mb-2 md:mb-6 uppercase">
                       {loc.title}
                     </h3>
                     <p className="text-[#212121]/70 text-[12px] lg:text-[18px] font-light italic leading-relaxed max-w-[300px] lg:max-w-md mx-auto lg:mx-0 border-none lg:border-l-2 border-[#722F37]/20 lg:pl-8">
@@ -142,14 +141,12 @@ export default function LocationSection() {
                     </p>
                     
                     {i === 4 && (
-                      <div className="mt-8">
-                        <button className="group relative px-6 py-3 md:px-8 md:py-4 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none">
-                          <span className="relative z-10 text-[#212121] text-[10px] font-bold uppercase tracking-[0.5em] transition-colors duration-500 group-hover:text-white">
-                            Разгледайте 360°
-                          </span>
-                          <div className="absolute -inset-[1px] bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0 scale-105"></div>
-                        </button>
-                      </div>
+                      <button className="group relative px-6 py-3 md:px-8 md:py-4 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none mt-4 md:mt-8 rounded-none">
+                        <span className="relative z-10 text-[#212121] text-[10px] font-bold uppercase tracking-[0.5em] transition-colors duration-500 group-hover:text-white">
+                          Разгледайте 360°
+                        </span>
+                        <div className="absolute -inset-[1px] bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0 scale-105"></div>
+                      </button>
                     )}
                   </div>
                 ))}
