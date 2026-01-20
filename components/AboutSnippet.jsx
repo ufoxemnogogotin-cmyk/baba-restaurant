@@ -34,7 +34,8 @@ export default function AboutSnippet() {
   };
 
   return (
-    <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-16 lg:pb-64 overflow-hidden">
+    <section className="relative z-40 bg-[#F5F2ED] pt-12 md:pt-20 lg:pt-32 pb-16 lg:pb-64 overflow-hidden">
+
       <div className="container lg:w-full lg:max-w-none mx-auto px-6 lg:px-0 lg:pl-[320px] lg:pr-[235px] relative">
         {/* HEADER */}
    <div className="mb-6 lg:mb-20 flex flex-col items-center lg:items-start mt-0">
