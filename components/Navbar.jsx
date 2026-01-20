@@ -175,11 +175,9 @@ export default function Navbar() {
               exit="exit"
               className="fixed inset-0 z-[100] bg-[#212121] flex flex-col md:flex-row"
             >
-              {/* ПРОМЯНА: pt-24 (беше pt-32) за да е по-нагоре на телефон */}
               <div className="w-full h-full flex flex-col md:flex-row relative pt-24 md:pt-0 overflow-y-auto">
                 
                 {/* Links Section */}
-                {/* ПРОМЯНА: space-y-3 (беше space-y-4) за да са по-сбити на телефон */}
                 <nav className="w-full md:w-2/3 flex flex-col justify-center px-10 md:pl-48 space-y-3 md:space-y-8">
                   {menuItems.map((item, index) => (
                     <motion.div 
@@ -197,7 +195,6 @@ export default function Navbar() {
                             setIsOpen(false);
                           }
                         }}
-                        // ПРОМЯНА: text-2xl (беше text-4xl) за телефон, md:text-7xl за десктоп
                         className="block text-white text-2xl md:text-7xl font-extralight uppercase tracking-tighter hover:italic hover:pl-4 md:hover:pl-8 transition-all duration-300 opacity-70 hover:opacity-100"
                       >
                         {item.name}
@@ -271,7 +268,8 @@ export default function Navbar() {
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 </Link>
                 <Link href="/reservation" className="h-16 col-span-3 flex items-center justify-center bg-white group active:bg-[#212121] transition-colors duration-300">
-                  <span className="text-[#212121] group-active:text-white uppercase tracking-[0.4em] text-[11px] font-bold">BOOK A TABLE</span>
+                  {/* ПРОМЯНА: Текстът е сменен на "Резервирай" */}
+                  <span className="text-[#212121] group-active:text-white uppercase tracking-[0.4em] text-[11px] font-bold">Резервирай</span>
                 </Link>
                 <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="h-16 col-span-1 flex items-center justify-center bg-white border-l border-[#212121]/5 active:bg-gray-100">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="1.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
