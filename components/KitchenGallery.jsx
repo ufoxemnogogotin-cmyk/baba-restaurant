@@ -86,7 +86,7 @@ export default function KitchenGallery() {
             <div className="block lg:hidden w-screen overflow-visible relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
               <div 
                 onScroll={handleMobileScroll}
-                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-8 overflow-y-visible"
+                className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 px-[10vw] pb-3 overflow-y-visible"
               >
                 {dishes.map((dish) => (
                   <div 
