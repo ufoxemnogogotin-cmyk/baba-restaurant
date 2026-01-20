@@ -20,7 +20,7 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="relative z-50 bg-[#F5F2ED] pt-16 pb-24 lg:py-48 overflow-hidden">
+    <section className="relative z-50 bg-[#F5F2ED] pt-12 pb-24 lg:py-48 overflow-hidden">
 
       
       {/* ПАРАЛАКС ТЕКСТ - Скрит на мобилни (hidden), за да не пречи на четимостта */}
