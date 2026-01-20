@@ -9,7 +9,7 @@ const zones = [
     desc: "Най-желаните места с изглед към Народния театър.",
     link: "https://booking.com/terrace",
     images: ["/loc1.jpg", "/loc2.jpg", "/loc4.jpg"],
-    alt: "Изглед от панорамната тераса на ресторант BABA към София" // SEO Alt Text
+    alt: "Изглед от панорамната тераса на ресторант BABA към София"
   },
   { 
     id: "salon", 
@@ -52,7 +52,6 @@ export default function InteractiveFloorPlan() {
     }
   };
 
-  // SEO & Accessibility: Смяна с клавиатура (Enter/Space)
   const handleKeyDown = (e, zone) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -62,18 +61,22 @@ export default function InteractiveFloorPlan() {
   };
 
   return (
-    <section className="bg-[#F5F2ED] min-h-[60vh] flex items-start px-12 lg:px-24 mt-[-35vh] relative z-20"> 
+    // ПРОМЕНИТЕ СА ТУК:
+    // 1. mt-0 за мобилни, lg:mt-[-35vh] за десктоп (премахва застъпването на телефон)
+    // 2. px-6 за мобилни (беше 12, което е твърде много)
+    // 3. py-12 за мобилни (добавя въздух), lg:py-0 за десктоп
+    <section className="bg-[#F5F2ED] min-h-[60vh] flex items-start px-6 lg:px-24 mt-0 lg:mt-[-35vh] py-12 lg:py-0 relative z-20"> 
       <div className="container mx-auto lg:ml-[10%]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           
           {/* ЛЯВА СТРАНА: КОНТЕНТ */}
-          <div className="lg:col-span-4 space-y-10 pt-2">
+          <div className="lg:col-span-4 space-y-10 pt-2 order-2 lg:order-1">
             <nav className="flex flex-col gap-4" aria-label="Избор на зона за резервация">
               {zones.map((zone) => (
                 <button
                   key={zone.id}
                   onMouseEnter={() => { setActiveZone(zone); setImgIndex(0); }}
-                  onFocus={() => { setActiveZone(zone); setImgIndex(0); }} // Поддръжка за Tab
+                  onFocus={() => { setActiveZone(zone); setImgIndex(0); }}
                   onKeyDown={(e) => handleKeyDown(e, zone)}
                   className={`group text-left border-l-2 pl-8 py-5 transition-all duration-500 outline-none focus:ring-1 focus:ring-[#722F37]/20 ${
                     activeZone.id === zone.id ? "border-[#722F37] bg-[#212121]/5" : "border-[#212121]/10 opacity-30"
@@ -94,11 +97,11 @@ export default function InteractiveFloorPlan() {
               <a 
                 href={activeZone.link} 
                 target="_blank" 
-                rel="noopener noreferrer" // SEO & Security
+                rel="noopener noreferrer"
                 title={`Резервирайте място в ${activeZone.title}`}
-                className="inline-block outline-none focus:ring-2 focus:ring-[#722F37] focus:ring-offset-4"
+                className="inline-block outline-none focus:ring-2 focus:ring-[#722F37] focus:ring-offset-4 w-full lg:w-auto"
               >
-                <button className="bg-[#722F37] text-white px-14 py-5 rounded-none uppercase font-bold tracking-[0.2em] text-[11px] hover:bg-[#212121] transition-all duration-500 shadow-xl pointer-events-none">
+                <button className="bg-[#722F37] text-white w-full lg:w-auto px-8 lg:px-14 py-5 rounded-none uppercase font-bold tracking-[0.2em] text-[11px] hover:bg-[#212121] transition-all duration-500 shadow-xl pointer-events-none">
                   Продължи с {activeZone.title}
                 </button>
               </a>
@@ -106,11 +109,12 @@ export default function InteractiveFloorPlan() {
           </div>
 
           {/* ДЯСНА СТРАНА: ГАЛЕРИЯ */}
-          <div className="lg:col-span-8 relative">
+          {/* order-1 lg:order-2 гарантира, че на мобилен снимката е първа (по желание, можеш да махнеш order класовете ако искаш текста първи) */}
+          <div className="lg:col-span-8 relative order-1 lg:order-2">
             <div 
               ref={galleryRef}
               role="button"
-              tabIndex="0" // Прави галерията достъпна с Tab
+              tabIndex="0"
               aria-label="Разгледайте снимки на зоната. Кликнете за следваща снимка."
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setMousePos(prev => ({ ...prev, isVisible: true }))}
@@ -121,16 +125,16 @@ export default function InteractiveFloorPlan() {
             >
               <Image 
                 src={activeZone.images[imgIndex]} 
-                alt={activeZone.alt} // SEO оптимизиран текст
+                alt={activeZone.alt}
                 fill 
-                priority={activeZone.id === "terrace"} // По-бързо зареждане за LCP
+                priority={activeZone.id === "terrace"}
                 className="object-cover transition-all duration-1000 ease-in-out scale-105 group-hover:scale-100" 
                 key={`${activeZone.id}-${imgIndex}`}
               />
 
-              {/* ИНТЕРАКТИВЕН КУРСОР */}
+              {/* ИНТЕРАКТИВЕН КУРСОР - скрит на тъч устройства за по-добър UX */}
               <div 
-                className={`pointer-events-none absolute z-50 flex items-center justify-center w-16 h-16 rounded-full border border-white/40 bg-black/10 backdrop-blur-md text-white text-xl transition-opacity duration-300 ${
+                className={`pointer-events-none absolute z-50 hidden lg:flex items-center justify-center w-16 h-16 rounded-full border border-white/40 bg-black/10 backdrop-blur-md text-white text-xl transition-opacity duration-300 ${
                   mousePos.isVisible ? 'opacity-100' : 'opacity-0'
                 }`}
                 style={{ left: mousePos.x - 32, top: mousePos.y - 32 }}
