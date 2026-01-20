@@ -266,7 +266,8 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-[#F5F2ED] border-t border-[#212121]/10"
+              // FIXED: Changed bg-[#F5F2ED] to bg-white. This ensures the "gap" under the bar is white.
+              className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-white border-t border-[#212121]/10"
             >
               <div className="grid grid-cols-5">
                 <Link href="tel:+359888000000" className="h-16 col-span-1 flex items-center justify-center border-r border-[#212121]/5 bg-white active:bg-gray-100">
