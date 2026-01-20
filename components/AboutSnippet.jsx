@@ -77,7 +77,8 @@ export default function AboutSnippet() {
             </motion.h3>
 
             <div className="max-w-xl mx-auto lg:mx-0 lg:ml-[12%]">
-              <p className="text-[#212121]/70 text-base leading-relaxed italic text-center lg:text-left max-w-[320px] mx-auto">
+              <p className="text-[#212121]/70 text-base lg:text-[18px]
+ leading-relaxed italic text-center lg:text-left max-w-[320px] mx-auto">
 
                 BABA не е просто дестинация, а преживяване, вдъхновено от
                 аристократизма на 19-ти век и смелостта на съвременното изкуство.
