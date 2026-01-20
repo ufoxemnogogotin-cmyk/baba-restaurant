@@ -33,33 +33,30 @@ export default function AboutSnippet() {
   };
 
   return (
-    <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-40 lg:pb-64 overflow-hidden">
+    <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-24 lg:pb-64 overflow-hidden">
       
-      {/* CONTAINER:
-         Mobile: px-6 (стандартно)
-         Desktop: lg:pl-[320px] (твоето изискване)
-      */}
       <div className="container lg:w-full lg:max-w-none mx-auto px-6 lg:px-0 lg:pl-[320px] lg:pr-[235px] relative">
         
-        {/* HEADER: Centered on mobile, Left on desktop */}
+        {/* HEADER */}
         <div className="mb-12 lg:mb-20 flex flex-col items-center lg:items-start">
-          <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold mb-6 opacity-40">Наследието</h2>
+          <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold mb-6 opacity-40">
+            Наследието
+          </h2>
           <div className="h-[1px] w-24 bg-[#722F37]/30"></div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center lg:items-start">
           
+          {/* TEXT */}
           <div className="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
-            {/* ЗАГЛАВИЕ: Centered flex col on mobile */}
             <motion.h3 
               variants={titleContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
-              className="text-[#212121] text-5xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 overflow-visible w-full"
+              className="text-[#212121] text-5xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 w-full"
             >
-              {/* ПЪРВИ РЕД: pr-0 on mobile, pr-10 on desktop */}
-              <div className="overflow-visible block pr-0 lg:pr-10">
+              <div className="pr-0 lg:pr-10">
                 {"Където миналото".split(" ").map((word, i) => (
                   <motion.span key={i} variants={wordAnimation} className="inline-block mx-2 lg:mx-0 lg:mr-4">
                     {word}
@@ -67,8 +64,7 @@ export default function AboutSnippet() {
                 ))}
               </div>
               
-              {/* ВТОРИ РЕД: pr-0 on mobile, pr-20 on desktop */}
-              <div className="overflow-visible block pr-0 lg:pr-20">
+              <div className="pr-0 lg:pr-20">
                 <motion.span 
                   variants={wordAnimation}
                   className="text-[#722F37] lg:ml-[12%] inline-block"
@@ -78,19 +74,16 @@ export default function AboutSnippet() {
               </div>
             </motion.h3>
             
-            <div className="max-w-xl mx-auto lg:mx-0 lg:ml-[12%] space-y-6 lg:space-y-8">
+            <div className="max-w-xl mx-auto lg:mx-0 lg:ml-[12%]">
               <p className="text-[#212121]/70 text-lg leading-relaxed italic">
                 BABA не е просто дестинация, а преживяване, вдъхновено от аристократизма на 19-ти век и смелостта на съвременното изкуство.
-              </p>
-              <p className="text-[#212121]/60 text-[15px] leading-relaxed">
-                Всяка рецепта е прочит на класиката през призмата на модерните кулинарни техники, поднесена върху бели покривки.
               </p>
             </div>
           </div>
 
-          {/* IMAGE COLUMN: Centered on mobile, End on desktop */}
-          <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center h-full pt-12 lg:pt-32 w-full">
-            <div className="relative w-full aspect-square max-w-[280px] mb-12">
+          {/* IMAGE + YEAR + BUTTON */}
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center h-full pt-6 lg:pt-32 w-full">
+            <div className="relative w-full aspect-square max-w-[240px] lg:max-w-[280px] mb-8 lg:mb-12">
                <div 
                  className="absolute inset-0 rotate-12 scale-150 opacity-10"
                  style={{ 
@@ -107,20 +100,24 @@ export default function AboutSnippet() {
                />
                
                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-[#722F37] text-8xl lg:text-[7vw] font-serif italic leading-none">2025</span>
-                  <span className="text-[#212121] text-[10px] uppercase tracking-[0.5em] font-bold opacity-40 mt-4">Est.</span>
+                  <span className="text-[#722F37] text-7xl lg:text-[7vw] font-serif italic leading-none">
+                    2025
+                  </span>
+                  <span className="text-[#212121] text-[10px] uppercase tracking-[0.5em] font-bold opacity-40 mt-3">
+                    Est.
+                  </span>
                </div>
             </div>
             
-            {/* БУТОН */}
+            {/* BUTTON – same size as other CTAs (mobile) */}
             <Link 
               href="/about" 
-              className="group relative px-12 py-5 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none flex items-center justify-center rounded-none"
+              className="group relative px-6 py-3 md:px-8 md:py-4 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none"
             >
-               <span className="relative z-10 text-[#212121] text-[11px] font-bold uppercase tracking-[0.5em] transition-colors duration-500 group-hover:text-white">
+               <span className="relative z-10 text-[#212121] text-[10px] font-bold uppercase tracking-[0.5em] transition-colors duration-500 group-hover:text-white">
                  Вижте историята
                </span>
-               <div className="absolute bottom-0 left-0 w-full h-0 bg-[#722F37] transition-all duration-500 ease-out group-hover:h-full"></div>
+               <div className="absolute -inset-[1px] bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0 scale-105"></div>
             </Link>
           </div>
         </div>
