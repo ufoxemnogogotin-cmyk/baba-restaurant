@@ -37,9 +37,6 @@ export default function Navbar() {
     document.body.style.overflow = (isOpen || isTransitioning) ? "hidden" : "unset";
   }, [isOpen, isTransitioning]);
 
-  // ------------------------------------------------------------------
-  // 🔄 ЛОГИКА ЗА КЛИК ВЪРХУ ЛОГОТО
-  // ------------------------------------------------------------------
   const handleLogoClick = (e) => {
     e.preventDefault();
     
@@ -73,8 +70,6 @@ export default function Navbar() {
     { name: "Събития", path: "/events", img: "/private-event.jpg" },
     { name: "Контакти", path: "/contact", img: null },
   ];
-
-  // --- ANIMATION CONFIG ---
 
   const smoothEasing = [0.22, 1, 0.36, 1]; 
 
@@ -169,7 +164,7 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* --- FULL-SCREEN MENU (ANIMATED WITH FIX) --- */}
+        {/* --- FULL-SCREEN MENU --- */}
         <AnimatePresence>
           {isOpen && (
             <motion.div 
@@ -180,10 +175,12 @@ export default function Navbar() {
               exit="exit"
               className="fixed inset-0 z-[100] bg-[#212121] flex flex-col md:flex-row"
             >
-              <div className="w-full h-full flex flex-col md:flex-row relative pt-32 md:pt-0 overflow-y-auto">
+              {/* ПРОМЯНА: pt-24 (беше pt-32) за да е по-нагоре на телефон */}
+              <div className="w-full h-full flex flex-col md:flex-row relative pt-24 md:pt-0 overflow-y-auto">
                 
                 {/* Links Section */}
-                <nav className="w-full md:w-2/3 flex flex-col justify-center px-10 md:pl-48 space-y-4 md:space-y-8">
+                {/* ПРОМЯНА: space-y-3 (беше space-y-4) за да са по-сбити на телефон */}
+                <nav className="w-full md:w-2/3 flex flex-col justify-center px-10 md:pl-48 space-y-3 md:space-y-8">
                   {menuItems.map((item, index) => (
                     <motion.div 
                       key={index}
@@ -200,7 +197,8 @@ export default function Navbar() {
                             setIsOpen(false);
                           }
                         }}
-                        className="block text-white text-4xl md:text-7xl font-extralight uppercase tracking-tighter hover:italic hover:pl-4 md:hover:pl-8 transition-all duration-300 opacity-70 hover:opacity-100"
+                        // ПРОМЯНА: text-2xl (беше text-4xl) за телефон, md:text-7xl за десктоп
+                        className="block text-white text-2xl md:text-7xl font-extralight uppercase tracking-tighter hover:italic hover:pl-4 md:hover:pl-8 transition-all duration-300 opacity-70 hover:opacity-100"
                       >
                         {item.name}
                       </Link>
@@ -266,7 +264,6 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              // FIXED: Changed bg-[#F5F2ED] to bg-white. This ensures the "gap" under the bar is white.
               className="lg:hidden fixed bottom-0 left-0 w-full z-[110] bg-white border-t border-[#212121]/10"
             >
               <div className="grid grid-cols-5">
