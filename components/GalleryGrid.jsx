@@ -1,179 +1,193 @@
-"use client";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+'use client';
 
-// Подредба: Виртуалната разходка заменя Специалитети (id 2) в грида
-const galleryImages = [
-  { id: 1, src: "/loc1.jpg", alt: "Екстериор BABA", span: "md:col-span-2 md:row-span-2", title: "Панорамна Тераса" },
-  { id: 3, src: "/loc2.jpg", alt: "Интериор BABA", span: "md:col-span-1 md:row-span-1", title: "Интериор" },
-  { id: 4, src: "/loc4.jpg", alt: "Каменен Бар", span: "md:col-span-1 md:row-span-2", title: "Коктейл Бар" },
-  { id: 5, src: "/dish2.jpg", alt: "Вкусове BABA", span: "md:col-span-2 md:row-span-1", title: "Вкусове & Цветове" },
-  { id: 2, src: "/dish1.jpg", alt: "Специалитети BABA", span: "md:col-span-1 md:row-span-1", title: "Специалитети" },
-];
+import React, { useState, useRef } from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
-export default function GalleryGrid() {
-  const [selectedImg, setSelectedImg] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+const KitchenGallery = () => {
+  const scrollContainerRef = useRef(null);
+  
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [showCursor, setShowCursor] = useState(false);
 
-  // Забрана на скрола при отворен модал
-  useEffect(() => {
-    if (selectedImg) {
-      document.body.style.overflow = "hidden";
+  // --- ДАННИ ---
+  const originalDishes = [
+    "/dish1.jpg", 
+    "/dish2.jpg", 
+    "/dish3.jpg", 
+  ];
+
+  // Infinity Loop Buffer (x4)
+  const dishes = [
+    ...originalDishes, 
+    ...originalDishes, 
+    ...originalDishes, 
+    ...originalDishes
+  ];
+
+  // --- ЛОГИКА (MOUSE MOVE) ---
+  const handleMouseMove = (e) => {
+    setCursorPos({ x: e.clientX, y: e.clientY });
+
+    if (e.target.closest('.gallery-scroll-area')) {
+      setShowCursor(true);
     } else {
-      document.body.style.overflow = "unset";
+      setShowCursor(false);
     }
-    return () => { document.body.style.overflow = "unset"; };
-  }, [selectedImg]);
-
-  useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setSelectedImg(null);
-    };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, []);
-
-  const openModal = (img, index) => {
-    setSelectedImg(img);
-    setCurrentIndex(index);
   };
 
-  const nextImg = (e) => {
-    e.stopPropagation();
-    const nextIndex = (currentIndex + 1) % galleryImages.length;
-    setSelectedImg(galleryImages[nextIndex]);
-    setCurrentIndex(nextIndex);
-  };
+  // --- ЛОГИКА (CLICK - САМО НАПРЕД) ---
+  const handleGalleryClick = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-  const prevImg = (e) => {
-    e.stopPropagation();
-    const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-    setSelectedImg(galleryImages[prevIndex]);
-    setCurrentIndex(prevIndex);
+    const items = Array.from(container.children).filter(child => child.tagName === 'DIV' && !child.classList.contains('spacer'));
+    const currentScroll = container.scrollLeft;
+    let currentIndex = 0;
+    let minDistance = Infinity;
+
+    items.forEach((item, index) => {
+      const dist = Math.abs(item.offsetLeft - currentScroll);
+      if (dist < minDistance) {
+        minDistance = dist;
+        currentIndex = index;
+      }
+    });
+
+    const setLength = originalDishes.length; 
+
+    if (currentIndex >= items.length - setLength - 1) {
+       const resetIndex = currentIndex - setLength * 2; 
+       if (items[resetIndex]) {
+         container.scrollTo({ left: items[resetIndex].offsetLeft, behavior: 'instant' });
+         setTimeout(() => {
+           const nextItem = items[resetIndex + 1];
+           if (nextItem) container.scrollTo({ left: nextItem.offsetLeft, behavior: 'smooth' });
+         }, 0);
+       }
+    } else {
+      const nextItem = items[currentIndex + 1];
+      if (nextItem) container.scrollTo({ left: nextItem.offsetLeft, behavior: 'smooth' });
+    }
   };
 
   return (
-    <div className="relative">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[250px] lg:auto-rows-[300px] relative z-10">
+    <div 
+      className="relative w-full md:min-h-screen bg-[#F5F2ED] text-[#212121] font-sans flex flex-col justify-center py-12 md:pt-40 md:pb-24 overflow-hidden"
+      onMouseMove={handleMouseMove}
+    >
+      
+      {/* ЗАГЛАВИЕ (ГОРЕ) */}
+      <h2 className="ml-6 md:ml-[320px] text-[#212121] uppercase tracking-[0.5em] text-[10px] font-bold mb-6 md:mb-12 opacity-40">
+        КУХНЯТА
+      </h2>
+
+      {/* --- ГАЛЕРИЯ КОНТЕЙНЕР --- */}
+      <div className="relative ml-6 md:ml-[320px] w-[calc(100vw-1.5rem)] md:w-[calc(100vw-320px)] mb-8 md:mb-16">
         
-        {/* ПЪРВА СНИМКА (ПАНОРАМА) */}
-        {galleryImages.slice(0, 1).map((img) => (
-          <motion.div
-            key={img.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.8 }}
-            onClick={() => openModal(img, 0)}
-            className={`relative overflow-hidden group cursor-pointer ${img.span}`}
+        {/* СКРОЛ ЗОНА */}
+        <div className="gallery-scroll-area w-full overflow-hidden">
+          <div 
+            ref={scrollContainerRef}
+            onClick={handleGalleryClick}
+            className={`
+              flex items-end overflow-x-auto gap-4 md:gap-6 pr-6 md:pr-10 pb-4
+              scrollbar-hide snap-x snap-mandatory w-full
+              ${showCursor ? 'cursor-none' : 'cursor-default'}
+            `}
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <Image src={img.src} alt={img.alt} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#212121]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-              <p className="text-white font-serif italic text-xl">{img.title}</p>
-            </div>
-            <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#722F37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20" />
-          </motion.div>
-        ))}
+            {dishes.map((img, index) => {
+              const isHorizontal = index % 2 === 0;
 
-        {/* ВИРТУАЛНА РАЗХОДКА (НА МЯСТОТО НА СПЕЦИАЛИТЕТИ) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="hidden md:flex items-center justify-center relative overflow-hidden h-full w-full bg-[#212121] group cursor-pointer"
-        >
-          <Image src="/private-event.jpg" alt="Виртуална разходка" fill className="object-cover opacity-40 grayscale group-hover:scale-110 transition-transform duration-1000" />
-          <div className="relative z-20 text-center px-6">
-            <div className="mb-4 flex justify-center text-white/80 group-hover:text-[#722F37] transition-colors duration-500">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <circle cx="12" cy="12" r="10" /><path d="M12 8v4l3 3" />
-                </svg>
-            </div>
-            <p className="text-[9px] uppercase tracking-[0.4em] text-white/60 mb-1">Интерактивно</p>
-            <h3 className="text-white font-serif italic text-xl uppercase tracking-tighter leading-none">Виртуална <br/> Разходка</h3>
+              return (
+                <div 
+                  key={index} 
+                  className={`
+                    relative flex-shrink-0 snap-start transition-all duration-500
+                    
+                    /* --- МОБИЛНИ РАЗМЕРИ --- */
+                    ${isHorizontal 
+                      ? 'w-[280px] h-[200px]' 
+                      : 'w-[200px] h-[300px]' 
+                    }
+                    
+                    /* --- ДЕСКТОП РАЗМЕРИ --- */
+                    ${isHorizontal 
+                      ? 'md:w-[35vw] md:h-[45vh]' 
+                      : 'md:w-[25vw] md:h-[55vh]'
+                    }
+                  `}
+                >
+                  <img 
+                    src={img} 
+                    alt={`Dish ${index}`} 
+                    className="w-full h-full object-cover md:hover:brightness-105 transition-all duration-500 block"
+                  />
+                </div>
+              );
+            })}
+            
+            <div className="spacer w-6 md:w-[50vw] flex-shrink-0"></div>
           </div>
-          <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#722F37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20" />
-        </motion.div>
+        </div>
 
-        {/* ОСТАНАЛИТЕ СНИМКИ ОТ ГАЛЕРИЯТА */}
-        {galleryImages.slice(1).map((img, index) => (
-          <motion.div
-            key={img.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: (index + 3) * 0.1, duration: 0.8 }}
-            onClick={() => openModal(img, index + 1)}
-            className={`relative overflow-hidden group cursor-pointer ${img.span}`}
-          >
-            <Image src={img.src} alt={img.alt} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#212121]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-              <p className="text-white font-serif italic text-xl">{img.title}</p>
-            </div>
-            <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#722F37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20" />
-          </motion.div>
-        ))}
-
-        {/* МАКСИМАЛНО УВЕЛИЧЕНО И СИВО ЛОГО */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="hidden md:flex items-center justify-center relative overflow-hidden h-full w-full"
-        >
-          <div className="relative w-[500px] h-[250px] opacity-20 grayscale brightness-0 transition-transform duration-700 hover:scale-110">
-            <Image src="/logo.svg" alt="BABA Grid Logo" fill className="object-contain" />
+        {/* --- МОБИЛЕН БУТОН (КРЪГЪЛ) --- */}
+        <div className="md:hidden absolute bottom-6 right-4 z-40 pointer-events-none">
+          <div className="w-12 h-12 bg-[#F5F2ED] border border-[#1a1a1a] rounded-full flex items-center justify-center opacity-90">
+             <ArrowRight className="text-[#1a1a1a] w-5 h-5" />
           </div>
-        </motion.div>
+        </div>
+
       </div>
 
-      {/* МОДАЛ / LIGHTBOX */}
-      <AnimatePresence>
-        {selectedImg && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImg(null)}
-            className="fixed inset-0 z-[1000] bg-[#212121]/98 backdrop-blur-md flex items-center justify-center p-4 md:p-8 cursor-zoom-out"
-          >
-            <button onClick={() => setSelectedImg(null)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-all z-[1100] p-4 outline-none">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
+      {/* --- ТЕКСТ (ДОЛУ) --- */}
+      <div className="w-full px-6 md:px-0 md:ml-[320px] md:max-w-[50vw] pointer-events-none z-30">
+        <div className="pointer-events-auto">
+          
+          {/* ЗАГЛАВИЕ: text-center за мобилен, text-left за десктоп */}
+          <h3 className="text-[#212121] text-3xl md:text-5xl lg:text-[5vw] font-serif italic leading-[1.1] tracking-tighter mb-6 uppercase text-center md:text-left">
+            Вкусът на миналото
+          </h3>
+          
+          {/* КОНТЕЙНЕР: items-center за мобилен, items-start за десктоп */}
+          <div className="flex flex-col items-center md:items-start gap-8">
+            
+            {/* ТЕКСТ: text-center за мобилен, text-left за десктоп */}
+            <p className="text-[#212121]/70 text-[12px] md:text-[18px] font-light italic leading-relaxed max-w-[280px] md:max-w-md border-none md:border-l-2 border-[#212121]/20 md:pl-8 text-center md:text-left">
+              "Всяка чиния е разказ, писан преди два века, но прочетен днес с нови сетива."
+            </p>
 
-            <div className="relative flex items-center justify-center w-full max-w-5xl h-full">
-                <button onClick={prevImg} className="absolute left-0 md:-left-24 text-white/70 hover:text-white transition-all z-[1050] p-4 text-6xl font-light outline-none"> ← </button>
-                <button onClick={nextImg} className="absolute right-0 md:-right-24 text-white/70 hover:text-white transition-all z-[1050] p-4 text-6xl font-light outline-none"> → </button>
+            {/* БУТОН С ГОЛЕМИ РАЗМЕРИ */}
+            <Link 
+              href="/menupage" 
+              className="group relative inline-block px-8 py-3 md:px-16 md:py-5 border-2 border-[#722F37]/40 overflow-hidden transition-all duration-700 hover:border-[#722F37] outline-none rounded-none md:ml-8"
+            >
+              <span className="relative z-10 text-[#212121] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] md:tracking-[0.5em] transition-colors duration-500 group-hover:text-white leading-tight flex items-center gap-3">
+                МЕНЮ
+                <ArrowRight size={14} className="group-hover:text-white transition-colors duration-500" />
+              </span>
+              <div className="absolute top-0 left-0 w-full h-full bg-[#722F37] translate-y-full transition-transform duration-700 ease-out group-hover:translate-y-0"></div>
+            </Link>
 
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white p-4 pb-16 md:p-6 md:pb-24 shadow-2xl relative w-full max-w-lg lg:max-w-xl cursor-default mx-auto"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F5F2ED]">
-                    <Image src={selectedImg.src} alt={selectedImg.alt} fill className="object-cover" priority />
-                  </div>
-                  <div className="mt-6 text-center px-4">
-                    <p className="text-[#212121] font-serif italic text-2xl md:text-3xl leading-none">{selectedImg.title}</p>
-                  </div>
-                  <div className="absolute bottom-4 md:bottom-8 left-6 md:left-10 right-6 md:right-10 flex justify-between items-center">
-                    <div className="relative w-24 h-10 opacity-30 grayscale brightness-0">
-                      <Image src="/logo.svg" alt="BABA" fill className="object-contain" />
-                    </div>
-                    <p className="text-[#212121]/30 text-[13px] font-black uppercase tracking-[0.4em]"> {currentIndex + 1} / {galleryImages.length} </p>
-                  </div>
-                </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      {/* --- КЪСТЪМ КУРСОР (DESKTOP) --- */}
+      <div 
+        className="fixed pointer-events-none z-50 hidden md:flex items-center justify-center w-20 h-20 rounded-full bg-[#1a1a1a] shadow-2xl transition-transform duration-100 ease-out mix-blend-multiply"
+        style={{ 
+          left: cursorPos.x, 
+          top: cursorPos.y,
+          opacity: showCursor ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${showCursor ? 1 : 0})`
+        }}
+      >
+        <ArrowRight className="text-[#F5F2ED] w-8 h-8" />
+      </div>
     </div>
   );
-}
+};
+
+export default KitchenGallery;
