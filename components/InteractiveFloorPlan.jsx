@@ -61,13 +61,15 @@ export default function InteractiveFloorPlan() {
   };
 
   return (
-    // Оправени отстояния: px-6 за мобилно, py-12 за въздух
-    <section className="bg-[#F5F2ED] min-h-[60vh] flex items-start px-6 lg:px-24 mt-0 lg:mt-[-35vh] py-12 lg:py-0 relative z-20"> 
+    /* КОРЕКЦИЯТА Е ТУК (Ред 82): 
+       Смених lg:mt-[-35vh] с lg:mt-0, за да свалим секцията надолу на десктоп.
+       mt-0 запазва оригиналния вид на мобилни устройства.
+    */
+    <section className="bg-[#F5F2ED] min-h-[60vh] flex items-start px-6 lg:px-24 mt-0 lg:mt-0 py-12 lg:py-0 relative z-20"> 
       <div className="container mx-auto lg:ml-[10%]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           
           {/* ЛЯВА СТРАНА: КОНТЕНТ (Текст и бутони) */}
-          {/* ПРОМЕНИ: text-center (мобилно), items-center (мобилно), order-2 (текста под снимката на мобилно) */}
           <div className="lg:col-span-4 space-y-10 pt-2 order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left">
             
             <nav className="flex flex-col gap-4 w-full" aria-label="Избор на зона за резервация">
@@ -77,10 +79,6 @@ export default function InteractiveFloorPlan() {
                   onMouseEnter={() => { setActiveZone(zone); setImgIndex(0); }}
                   onFocus={() => { setActiveZone(zone); setImgIndex(0); }}
                   onKeyDown={(e) => handleKeyDown(e, zone)}
-                  // ПРОМЕНИ В БУТОНА: 
-                  // text-center lg:text-left -> Центриран текст на мобилно
-                  // border-l-0 lg:border-l-2 -> Махаме чертата отляво на мобилно
-                  // pl-0 lg:pl-8 -> Махаме левия падинг на мобилно
                   className={`group py-5 transition-all duration-500 outline-none focus:ring-1 focus:ring-[#722F37]/20
                     text-center lg:text-left 
                     border-l-0 lg:border-l-2 
@@ -92,7 +90,6 @@ export default function InteractiveFloorPlan() {
                   <h3 className="text-2xl font-serif italic uppercase text-[#212121] mb-1 tracking-tighter leading-none">
                     {zone.title}
                   </h3>
-                  {/* mx-auto центрира параграфа, когато е на мобилно */}
                   <p className="text-[13px] text-[#212121]/60 italic max-w-xs leading-relaxed mt-2 mx-auto lg:mx-0">
                     {zone.desc}
                   </p>
@@ -101,7 +98,6 @@ export default function InteractiveFloorPlan() {
             </nav>
 
             {/* КОНТЕЙНЕР НА БУТОНА ЗА РЕЗЕРВАЦИЯ */}
-            {/* justify-center за мобилно */}
             <div className="pt-4 w-full flex justify-center lg:justify-start">
               <a 
                 href={activeZone.link} 
@@ -118,7 +114,6 @@ export default function InteractiveFloorPlan() {
           </div>
 
           {/* ДЯСНА СТРАНА: ГАЛЕРИЯ (Снимки) */}
-          {/* order-1: Снимката е първа на мобилно */}
           <div className="lg:col-span-8 relative order-1 lg:order-2 w-full">
             <div 
               ref={galleryRef}
