@@ -51,7 +51,8 @@ export default function AboutSnippet() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
-              className="text-[#212121] text-5xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 w-full"
+              className="text-[#212121] text-3xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 w-full"
+
             >
               <div className="pr-0 lg:pr-10">
                 {"Където миналото".split(" ").map((word, i) => (
