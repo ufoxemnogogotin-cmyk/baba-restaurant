@@ -37,7 +37,7 @@ export default function AboutSnippet() {
     <section className="relative z-40 bg-[#F5F2ED] pt-20 lg:pt-32 pb-16 lg:pb-64 overflow-hidden">
       <div className="container lg:w-full lg:max-w-none mx-auto px-6 lg:px-0 lg:pl-[320px] lg:pr-[235px] relative">
         {/* HEADER */}
-        <div className="mb-12 lg:mb-20 flex flex-col items-center lg:items-start mt-6 lg:mt-0">
+        <div className="mb-12 lg:mb-6 flex flex-col items-center lg:items-start mt-6 lg:mt-0">
           <h2 className="text-[#212121] uppercase tracking-[1em] text-[10px] font-bold mb-0 opacity-40">
             ЗА НАС
           </h2>
@@ -51,7 +51,7 @@ export default function AboutSnippet() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
-              className="text-[#212121] text-3xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-10 lg:mb-12 flex flex-col items-center lg:items-start gap-0 w-full"
+              className="text-[#212121] text-3xl lg:text-[5.5vw] font-serif italic leading-[1.05] uppercase tracking-tighter mb-8 lg:mb-12 flex flex-col items-center lg:items-start gap-0 w-full"
 
             >
               <div className="pr-0 lg:pr-10">
