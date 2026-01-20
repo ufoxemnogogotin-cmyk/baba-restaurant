@@ -73,10 +73,6 @@ export default function GalleryGrid() {
         ))}
 
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.8 }}
           className="hidden md:flex items-center justify-center relative overflow-hidden h-full w-full bg-[#212121] group cursor-pointer"
         >
           <Image src="/private-event.jpg" alt="Виртуална разходка" fill className="object-cover opacity-40 grayscale group-hover:scale-110 transition-transform duration-1000" />
@@ -111,13 +107,9 @@ export default function GalleryGrid() {
         ))}
 
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.8 }}
           className="hidden md:flex items-center justify-center relative overflow-hidden h-full w-full"
         >
-          <div className="relative w-[500px] h-[250px] opacity-20 grayscale brightness-0 transition-transform duration-700 hover:scale-110">
+          <div className="relative w-[500px] h-[250px] opacity-20 grayscale brightness-0">
             <Image src="/logo.svg" alt="BABA Grid Logo" fill className="object-contain" />
           </div>
         </motion.div>
@@ -132,31 +124,26 @@ export default function GalleryGrid() {
             onClick={() => setSelectedImg(null)}
             className="fixed inset-0 z-[1000] bg-[#212121]/98 backdrop-blur-md flex items-center justify-center p-4 md:p-8 cursor-zoom-out"
           >
+            {/* ЗАТВОРЯНЕ - ГОРЕ ВДЯСНО */}
+            <button 
+              onClick={() => setSelectedImg(null)} 
+              className="absolute top-6 right-6 md:top-10 md:right-10 text-white/60 hover:text-white transition-all z-[1100] flex items-center gap-2 outline-none"
+            >
+              <span className="text-[10px] uppercase tracking-[0.4em] hidden md:block">Затвори</span>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+
             <div className="relative flex flex-col items-center justify-center w-full max-w-5xl h-full">
                 
-                {/* СТРЕЛКИ - В КРЪГЧЕТА */}
-                <button onClick={prevImg} className="absolute left-2 md:-left-24 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all z-[1050] outline-none">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <button onClick={nextImg} className="absolute right-2 md:-right-24 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all z-[1050] outline-none">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white p-4 pb-16 md:p-6 md:pb-24 shadow-2xl relative w-full max-w-lg lg:max-w-xl cursor-default mx-auto"
+                  className="bg-white p-4 pb-20 md:p-6 md:pb-24 shadow-2xl relative w-full max-w-lg lg:max-w-xl cursor-default mx-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* БУТОН ЗА ЗАТВАРЯНЕ - ПОД СНИМКАТА ВДЯСНО ЗА ТЕЛЕФОН */}
-                  <button onClick={() => setSelectedImg(null)} className="absolute -bottom-14 right-0 md:top-0 md:-right-16 text-white/60 hover:text-white transition-all p-2 flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-widest md:hidden">Затвори</span>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                  </button>
-
                   <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F5F2ED]">
                     <Image src={selectedImg.src} alt={selectedImg.alt} fill className="object-cover" priority />
                   </div>
@@ -166,7 +153,6 @@ export default function GalleryGrid() {
                   </div>
 
                   <div className="absolute bottom-4 md:bottom-8 left-6 md:left-10 right-6 md:right-10 flex justify-start md:justify-between items-center">
-                    {/* ЛОГО - ВЛЯВО ЗА ТЕЛЕФОН */}
                     <div className="relative w-20 h-8 md:w-24 md:h-10 opacity-30 grayscale brightness-0">
                       <Image src="/logo.svg" alt="BABA" fill className="object-contain" />
                     </div>
@@ -174,7 +160,25 @@ export default function GalleryGrid() {
                       {currentIndex + 1} / {galleryImages.length} 
                     </p>
                   </div>
+
+                  {/* СТРЕЛКИ (КРЪГЧЕТА) - ДОЛУ ПОД СНИМКАТА НА ТЕЛЕФОН */}
+                  <div className="absolute -bottom-16 left-0 w-full flex justify-center gap-6 md:hidden">
+                    <button onClick={prevImg} className="bg-white/10 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full flex items-center justify-center active:scale-90 transition-all outline-none">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <button onClick={nextImg} className="bg-white/10 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full flex items-center justify-center active:scale-90 transition-all outline-none">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                  </div>
                 </motion.div>
+
+                {/* ДЕСКТОП СТРЕЛКИ (ОСТАВАТ ОТСТРАНИ) */}
+                <button onClick={prevImg} className="hidden md:flex absolute -left-24 bg-white/5 hover:bg-white/10 text-white w-16 h-16 rounded-full items-center justify-center transition-all outline-none">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button onClick={nextImg} className="hidden md:flex absolute -right-24 bg-white/5 hover:bg-white/10 text-white w-16 h-16 rounded-full items-center justify-center transition-all outline-none">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
             </div>
           </motion.div>
         )}
