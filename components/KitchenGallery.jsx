@@ -14,7 +14,7 @@ export default function KitchenGallery() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // --- ЛОГИКА ЗА ДЕСКТОП СКРОЛ АНИМАЦИЯ ---
+  // --- ЛОГИКА САМО ЗА ДЕСКТОП (СКРОЛ АНИМАЦИЯ) ---
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -28,17 +28,24 @@ export default function KitchenGallery() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // --- ЛОГИКА ЗА МОБИЛЕН СЛАЙДЪР (Индикатори) ---
+  // --- ЛОГИКА САМО ЗА МОБИЛЕН (СЛАЙДЪР ИНДИКАТОРИ) ---
   const handleMobileScroll = () => {
     if (mobileSliderRef.current) {
       const scrollLeft = mobileSliderRef.current.scrollLeft;
-      const width = mobileSliderRef.current.offsetWidth;
-      const newIndex = Math.round(scrollLeft / width);
-      setActiveSlide(newIndex);
+      const width = mobileSliderRef.current.offsetWidth; // Ширината на видимата част
+      const center = scrollLeft + (width / 2); // Центъра на екрана
+      
+      // Тъй като картите са по-малки от екрана, изчисляваме на база децата
+      // Най-просто: делим скрола на ширината на една карта (приблизително)
+      const newIndex = Math.round(scrollLeft / (window.innerWidth * 0.85));
+      
+      // Ограничаваме индекса да не излиза извън масива
+      const clampedIndex = Math.min(Math.max(newIndex, 0), dishes.length - 1);
+      setActiveSlide(clampedIndex);
     }
   };
 
-  // --- СТИЛОВЕ САМО ЗА ДЕСКТОП ---
+  // --- СТИЛОВЕ ЗА ДЕСКТОП АНИМАЦИЯТА ---
   const getDesktopStyle = (index) => {
     const animationEnd = 0.85; 
     const step = animationEnd / dishes.length;
@@ -59,7 +66,7 @@ export default function KitchenGallery() {
       transform: `translateX(${x}%) rotate(${index * 2}deg)`,
       zIndex: 10 + index,
       transition: 'transform 0.1s linear, opacity 0.3s ease-out',
-      position: 'absolute' 
+      position: 'absolute' // Важно: Това важи само за десктоп контейнера
     };
   };
 
@@ -69,7 +76,7 @@ export default function KitchenGallery() {
       {/* Sticky Container */}
       <div className="relative lg:sticky top-0 w-full flex flex-col lg:flex-row items-center justify-center overflow-hidden min-h-[100dvh] lg:h-screen py-12 lg:py-0">
         
-        {/* BACKGROUND TEXT (ARTFOOD) - Desktop Only */}
+        {/* BACKGROUND TEXT (ARTFOOD) - Само за Desktop */}
         <div className="hidden lg:flex absolute bottom-0 left-0 w-full justify-start pointer-events-none overflow-hidden z-0">
           <span 
             className="text-[#BAC095]/10 lg:text-[25vw] font-serif italic whitespace-nowrap leading-none"
@@ -83,34 +90,33 @@ export default function KitchenGallery() {
         <div className="container lg:w-full lg:max-w-1200 mx-auto px-0 md:px-12 lg:px-0 lg:pl-[320px] lg:pr-[15vw] w-full relative h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between z-10">
           
           {/* MOBILE TITLE */}
-          <div className="w-full lg:hidden text-center mb-4 flex-shrink-0 z-[50] px-6">
+          <div className="w-full lg:hidden text-center mb-6 flex-shrink-0 z-[50] px-6">
             <h2 className="text-[#212121]/40 uppercase tracking-[0.5em] text-[10px] font-bold">
               Culinary Heritage
             </h2>
           </div>
 
-          {/* === РАЗДЕЛЕНИЕ НА КОНТЕЙНЕРИТЕ === 
-            Тук е ключът: Два отделни DIV-а. Един за мобилни (flex slider) и един за десктоп (absolute stack).
-            Това предотвратява конфликтите.
-          */}
-
-          <div className="w-full flex flex-col items-center order-1 lg:order-2 flex-shrink-0 mb-8 lg:mb-0 lg:w-[55%]">
+          {/* === ТУК Е ГОЛЯМАТА ПРОМЯНА === */}
+          {/* Разделяме контейнерите за снимки на два напълно независими блока */}
+          
+          <div className="w-full flex flex-col items-center order-1 lg:order-2 flex-shrink-0 mb-8 lg:mb-0 lg:w-[55%] lg:relative lg:h-[80vh]">
             
-            {/* 1. MOBILE SLIDER (Visible only on LG hidden) */}
-            <div className="w-full block lg:hidden relative">
+            {/* 1. МОБИЛЕН СЛАЙДЪР (Видим само до lg) */}
+            {/* Това е чист CSS слайдър, без JS анимации за позиция */}
+            <div className="block lg:hidden w-full relative">
               <div 
                 ref={mobileSliderRef}
                 onScroll={handleMobileScroll}
                 className="
                   flex 
+                  w-full
                   overflow-x-auto 
                   snap-x snap-mandatory 
                   scrollbar-hide 
                   px-6 
-                  gap-4 
                   pb-4
+                  gap-4
                   items-center
-                  touch-pan-x
                 "
               >
                 {dishes.map((dish) => (
@@ -118,7 +124,10 @@ export default function KitchenGallery() {
                     key={dish.id}
                     className="
                       bg-white p-2 pb-8 shadow-[0_10px_30px_rgba(0,0,0,0.1)] 
-                      relative min-w-[85vw] snap-center flex-shrink-0
+                      relative 
+                      min-w-[85vw] /* Заема 85% от екрана, за да се вижда малко от следващата */
+                      snap-center 
+                      flex-shrink-0
                       rounded-sm
                     "
                   >
@@ -132,49 +141,40 @@ export default function KitchenGallery() {
                     </div>
                   </div>
                 ))}
-                 {/* Spacer right */}
-                 <div className="min-w-[6vw] h-full flex-shrink-0 snap-align-none"></div>
+                {/* Празно място накрая, за да може последната карта да се центрира */}
+                <div className="min-w-[4vw] h-full flex-shrink-0 snap-align-none"></div>
               </div>
 
-              {/* DOTS INDICATORS (Само за мобилни) */}
+              {/* ИНДИКАТОРИ (ТОЧКИ) - Само в мобилния контейнер */}
               <div className="flex justify-center gap-3 mt-4 w-full">
                 {dishes.map((_, index) => (
-                  <button
+                  <div
                     key={index}
-                    onClick={() => {
-                        if(mobileSliderRef.current) {
-                            const width = mobileSliderRef.current.offsetWidth; // или child width
-                            // Най-просто скролване до позиция
-                            mobileSliderRef.current.scrollTo({
-                                left: index * (window.innerWidth * 0.85 + 16), // приблизителна ширина + gap
-                                behavior: 'smooth'
-                            })
-                        }
-                    }}
                     className={`
-                      w-2 h-2 rounded-full transition-all duration-300
-                      ${index === activeSlide ? 'bg-[#722F37] w-6' : 'bg-[#212121]/20'}
+                      h-2 rounded-full transition-all duration-300
+                      ${index === activeSlide ? 'bg-[#722F37] w-8' : 'bg-[#212121]/20 w-2'}
                     `}
                   />
                 ))}
               </div>
             </div>
 
-            {/* 2. DESKTOP STACK (Visible only on LG block) */}
-            <div className="hidden lg:block relative h-[80vh] w-full">
+            {/* 2. ДЕСКТОП СТАК (Видим само от lg нагоре) */}
+            {/* Тук ползваме getDesktopStyle за сложните анимации */}
+            <div className="hidden lg:block w-full h-full relative">
                {dishes.map((dish, index) => (
                 <div 
                   key={dish.id}
                   style={getDesktopStyle(index)}
                   className="
                     bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] origin-bottom
-                    lg:w-[400px] lg:p-4 lg:pb-20 
+                    w-[400px] p-4 pb-20 
                   "
                 >
                   <div className="relative aspect-[3.5/5] overflow-hidden grayscale-[10%]">
                     <Image src={dish.img} alt={dish.title} fill className="object-cover" priority={index === 0} />
                   </div>
-                  <div className="absolute bottom-2 lg:bottom-6 left-0 w-full text-center px-2">
+                  <div className="absolute bottom-6 left-0 w-full text-center px-2">
                     <span className="text-[#212121]/60 font-serif italic text-[14px] tracking-[0.2em] uppercase block truncate">
                       {dish.title}
                     </span>
@@ -185,7 +185,7 @@ export default function KitchenGallery() {
 
           </div>
 
-          {/* TEXT SIDE */}
+          {/* TEXT SIDE - Без промяна */}
           <div className="w-full lg:w-[45%] flex flex-col items-center lg:items-start order-2 lg:order-1 text-center lg:text-left flex-shrink-0 px-6 lg:px-0">
             <h2 className="hidden lg:block text-[#212121]/40 uppercase tracking-[0.8em] text-[10px] font-bold mb-16 opacity-40">
               Culinary Heritage
